@@ -19,7 +19,7 @@ if (typeof window !== "undefined") {
 }
 
 interface VideoPlayerProps {
-  options: videojs.PlayerOptions;
+  options: any;
   onReady?: (player: Player) => void;
 }
 
@@ -46,7 +46,7 @@ class QualityItem extends MenuItem {
   }
 
   handleClick() {
-    const levels = this.player().qualityLevels();
+    const levels = (this.player() as any).qualityLevels();
 
     for (let i = 0; i < levels.length; i++) {
       levels[i].enabled = this.isAuto || levels[i] === this.level;
@@ -58,9 +58,9 @@ class QualityButton extends MenuButton {
   constructor(player: Player) {
     super(player);
 
-    this.controlText("Quality");
+    (this as any).controlText("Quality");
 
-    this.el().classList.add("vjs-quality-selector");
+    (this as any).el().classList.add("vjs-quality-selector");
   }
 
   createItems() {
@@ -75,7 +75,7 @@ class QualityButton extends MenuButton {
       }),
     );
 
-    Array.from(player.qualityLevels())
+    Array.from((player as any).qualityLevels())
       .sort((a: any, b: any) => b.height - a.height)
       .forEach((level: any) => {
         items.push(
@@ -166,27 +166,27 @@ export default function VideoPlayer({ options, onReady }: VideoPlayerProps) {
       switch (e.key) {
         case "ArrowRight":
         case "l":
-          p.currentTime(p.currentTime() + 10);
+          p.currentTime((p.currentTime() ?? 0) + 10);
           showHUD("+10 sec ▶▶");
           break;
 
         case "ArrowLeft":
         case "j":
-          p.currentTime(p.currentTime() - 10);
+          p.currentTime((p.currentTime() ?? 0) - 10);
           showHUD("◀◀ -10 sec");
           break;
 
         case "ArrowUp":
-          p.volume(Math.min(p.volume() + 0.1, 1));
+          p.volume(Math.min((p.volume()??0) + 0.1, 1));
 
-          showHUD(`🔊 ${Math.round(p.volume() * 100)}%`);
+          showHUD(`🔊 ${Math.round((p.volume()??0) * 100)}%`);
 
           break;
 
         case "ArrowDown":
-          p.volume(Math.max(p.volume() - 0.1, 0));
+          p.volume(Math.max((p.volume() ?? 0) - 0.1, 0));
 
-          showHUD(`🔉 ${Math.round(p.volume() * 100)}%`);
+          showHUD(`🔉 ${Math.round((p.volume() ?? 0) * 100)}%`);
 
           break;
 
@@ -219,11 +219,11 @@ export default function VideoPlayer({ options, onReady }: VideoPlayerProps) {
     ====================== */
 
     player.on("loadedmetadata", () => {
-      const levels = player.qualityLevels();
+      const levels = (player as any).qualityLevels();
 
       if (!levels || levels.length <= 1) return;
 
-      const controlBar = player.controlBar;
+      const controlBar = (player as any).controlBar;
 
       if (!controlBar.getChild("QualityButton")) {
         const rateButton = controlBar.getChild("PlaybackRateMenuButton");

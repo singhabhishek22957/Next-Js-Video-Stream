@@ -1,9 +1,7 @@
 "use client";
-
-import Link from "next/link";
 import { Trash2, Pencil, Check, X } from "lucide-react";
 import {updateActive, userDelete} from "@/features/auth/actions/userCRUD.action"
-import { useEffect, useTransition } from "react";
+import {  useTransition } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -13,10 +11,10 @@ interface User {
   email: string;
   active: boolean;
   isDeleted: boolean;
-  lastSeen: Date;
+  lastSeen?: Date | undefined;
   online: boolean;
   isLocked: boolean;
-  lockUntil: Date;
+  lockUntil?: Date;
 }
 
 

@@ -133,7 +133,7 @@ export default function LanguageManager({ languages }: Props) {
               <tr key={language._id} className="border-b">
                 <td className="p-3">
                   <Image
-                    src={language.thumbnailUrl}
+                    src={language.thumbnailUrl || "/image/default-thumbnail.png"}
                     alt={language.name}
                     width={50}
                     height={50}
@@ -168,7 +168,7 @@ export default function LanguageManager({ languages }: Props) {
                         setFormData({
                           name: language.name,
                           code: language.code,
-                          thumbnailUrl: language.thumbnailUrl
+                          thumbnailUrl: language.thumbnailUrl || "/image/default-thumbnail.png"
                         });
                       }}
                     >

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const session = await auth();
     const user = session?.user;
 
-    if(!user){
+    if (!user) {
       return new NextResponse("You are not logged in", { status: 401 });
     }
     const formData = await request.formData();
@@ -45,7 +45,10 @@ export async function POST(request: NextRequest) {
 
     const language = formData.get("language") as string;
 
-    const status = formData.get("status") as string;
+    const rawStatus = formData.get("status");
+
+    const status: "published" | "unlisted" =
+      rawStatus === "unlisted" ? "unlisted" : "published";
 
     const actors = JSON.parse(String(formData.get("actors") || "[]"));
 
@@ -213,7 +216,6 @@ export async function POST(request: NextRequest) {
 
     const videoUrl = `${process.env.BUNNY_HOSTNAME}/videos/${lessonId}/master.m3u8`;
 
-
     const video = await Video.create({
       lessonId,
       uploader: user?.id,
@@ -275,5 +277,3 @@ export async function POST(request: NextRequest) {
     }
   }
 }
-
-

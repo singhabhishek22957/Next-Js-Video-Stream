@@ -7,7 +7,7 @@ export interface SidebarChildItem {
 
 export interface SidebarMenuItem {
   label: string;
-  icon: IconType;
+  icon: "home" | "video" | "language" | "map" | 'users' | 'fileText' | 'settings' | 'email' |'action';
   path?: string;
   children?: SidebarChildItem[];
 }

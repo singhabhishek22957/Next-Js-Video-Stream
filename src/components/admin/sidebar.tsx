@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { adminSidebarMenuItems } from "@/config";
+import { iconMap } from "../menuItems";
 
 interface AdminSidebarProps {
   open: boolean;
@@ -52,6 +53,7 @@ function MenuItems({
       {adminSidebarMenuItems.map((item) => {
         const isActive =
           pathname === item.path;
+          const Icon = iconMap[item.icon];
 
         return (
           <div key={item.label}>
@@ -77,7 +79,7 @@ function MenuItems({
                 "
               >
                 <div className="flex items-center gap-3">
-                  <item.icon size={18} />
+                  <Icon size={18} />
                   <span>{item.label}</span>
                 </div>
 
@@ -109,7 +111,7 @@ function MenuItems({
                   }
                 `}
               >
-                <item.icon size={18} />
+                <Icon size={18} />
                 {item.label}
               </Link>
             )}

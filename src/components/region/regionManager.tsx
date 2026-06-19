@@ -133,7 +133,7 @@ export default function RegionManager({ regions }: Props) {
               <tr key={region._id} className="border-b">
                 <td className="p-3">
                   <Image
-                    src={region.thumbnailUrl}
+                    src={region.thumbnailUrl || "/image/default-thumbnail.png"}
                     width={50}
                     height={50}
                     alt={region.name}
@@ -168,7 +168,7 @@ export default function RegionManager({ regions }: Props) {
                         setFormData({
                           name: region.name,
                           code: region.code,
-                          thumbnailUrl: region.thumbnailUrl,
+                          thumbnailUrl: region.thumbnailUrl || "/image/default-thumbnail.png",
                         });
                       }}
                     >

@@ -6,12 +6,26 @@ import { usePathname } from "next/navigation";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 import { FaHome, FaMap, FaVideo, FaLanguage } from "react-icons/fa";
+import { GrAction } from "react-icons/gr";
+import {
+  FiUsers,
+  FiSettings,
+  FiFileText,
+} from "react-icons/fi";
 
-const iconMap = {
+import { MdEmail } from "react-icons/md";
+
+
+ export const iconMap = {
   home: FaHome,
   map: FaMap,
   video: FaVideo,
   language: FaLanguage,
+  users: FiUsers,
+  settings: FiSettings,
+  action: GrAction,
+  fileText: FiFileText,
+  email: MdEmail
 };
 
 import { SidebarMenuItem } from "@/types/sidebar";
@@ -79,7 +93,7 @@ const MenuItems = memo(({ menuItems, setOpen }: MenuItemsProps) => {
                     }
                   `}
                 >
-                  <item.icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4" />
 
                   <span>{item.label}</span>
                 </Link>

@@ -32,7 +32,8 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
     notFound();
   }
 
-  const items = await getSearchTypeValuesAction(type);
+  const data = await getSearchTypeValuesAction(type);
+  const items = Array.isArray(data) ? data : [];
 
   return (
     <div className="min-h-screen">
@@ -69,7 +70,7 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
 
       {/* Grid section */}
       <div className="max-w-[1600px] mx-auto px-4 py-8 md:px-8 md:py-10">
-        {items.length > 0 ? (
+        { items.length > 0 ? (
           <>
             {/* Divider label */}
           

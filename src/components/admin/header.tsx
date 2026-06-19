@@ -8,10 +8,7 @@ import { FiLogOut, FiMenu } from "react-icons/fi";
 interface AdminHeaderProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  user: {
-    name?: string | null;
-    email?: string | null;
-  };
+  
 }
 
 export default function AdminHeader({

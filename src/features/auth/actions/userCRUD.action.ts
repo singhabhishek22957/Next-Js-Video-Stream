@@ -27,7 +27,7 @@ export async function allUserAction() {
       message: "User fetch successfully",
       data: users,
     };
-  } catch (error) {
+  } catch (error: any) {
     if (error) {
       return {
         success: false,
@@ -64,7 +64,7 @@ export async function deletedUser() {
       message: "Deleted user fetch successfully",
       data: users,
     };
-  } catch (error) {
+  } catch (error : any) {
     if (error) {
       return {
         success: false,
@@ -122,7 +122,7 @@ export async function registerAction(data: unknown) {
       message: "User created successfully",
       data: user,
     };
-  } catch (error) {
+  } catch (error: any) {
     if (error) {
       return {
         success: false,
@@ -160,7 +160,7 @@ export async function updateActive(id: unknown) {
       message: `${existingUser.name} ${existingUser.active ? "activated" : "deactivated"} successfully`,
       data: result,
     };
-  } catch (error) {
+  } catch (error : any) {
     if (error) {
       return {
         success: false,
@@ -198,7 +198,7 @@ export async function userDelete(id: unknown) {
       message: `${existingUser.name} ${existingUser.isDeleted ? "Deleted" : "Restored"} successfully`,
       data: result,
     };
-  } catch (error) {
+  } catch (error : any) {
     if (error) {
       return {
         success: false,
@@ -236,7 +236,7 @@ export async function logoutAction() {
 import { z } from "zod";
 import { passwordSchema } from "@/validations/auth.validation";
 
-export async function resetPasswordAction(data: unknown) {
+export async function resetPasswordAction(data: any) {
   const passwordSchemas = z.object({
     password: passwordSchema,
   });
@@ -263,7 +263,7 @@ export async function resetPasswordAction(data: unknown) {
     }
     user.password = password;
     await user.save();
-  } catch (error) {
+  } catch (error : any) {
     if (error) {
       return {
         success: false,

@@ -147,7 +147,7 @@ export default function GenreManager({ genres }: Props) {
               <tr key={genre._id} className="border-b">
                 <td className="p-3">
                   <Image
-                  src={genre?.thumbnailUrl}
+                  src={genre?.thumbnailUrl || "/image/default-thumbnail.png"}
                   alt="Thumbnail"
                   width={100}
                   height={100}

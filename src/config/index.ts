@@ -1,12 +1,3 @@
-import {
-  FiHome,
-  FiUsers,
-  FiSettings,
-  FiFileText,
-} from "react-icons/fi";
-
-import { FaVideo } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
 
 
 import { SidebarMenuItem } from "@/types/sidebar";
@@ -14,12 +5,12 @@ import { SidebarMenuItem } from "@/types/sidebar";
 export const adminSidebarMenuItems: SidebarMenuItem[] = [
   {
     label: "Dashboard",
-    icon: FiHome,
+    icon: "home",
     path: "/admin/dashboard",
   },
   {
     label: "Users",
-    icon: FiUsers,
+    icon: "users",
     children: [
       {
         label: "All Users",
@@ -37,7 +28,7 @@ export const adminSidebarMenuItems: SidebarMenuItem[] = [
   },
   {
     label: "Videos",
-    icon: FaVideo,
+    icon: "video",
     children: [
       {
         label: "All Videos",
@@ -67,7 +58,7 @@ export const adminSidebarMenuItems: SidebarMenuItem[] = [
   },
   {
     label: "Contact",
-    icon: MdEmail,
+    icon: "email",
     children: [
       {
         label: "All Contact",
@@ -84,34 +75,34 @@ export const adminSidebarMenuItems: SidebarMenuItem[] = [
     ],
   },
   {
-    label: "Others",
-    icon: FiFileText,
+    label: "Actions",
+    icon: "action",
     children: [
       {
-        label: "Genre Action",
+        label: "Genre",
         path: "/admin/genre",
       },
       {
-        label: "Region Action",
+        label: "Region",
         path: "/admin/region",
       },
       {
-        label: "Language Action",
+        label: "Language",
         path: "/admin/language",
       },{
-        label: "Image Action",
+        label: "Image",
         path: "/admin/images",
       },
     ],
   },
   {
     label: "Reports",
-    icon: FiFileText,
+    icon: "fileText",
     path: "/admin/reports",
   },
   {
     label: "Settings",
-    icon: FiSettings,
+    icon: "settings",
     path: "/admin/settings",
   },
 ];
