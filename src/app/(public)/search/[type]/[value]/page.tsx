@@ -70,7 +70,7 @@ export default async function SearchValuePage({
               subtitle={`Page ${currentPage} of ${result.totalPages}`}
             />
 
-            {result.totalPages > 1 && (
+            {result.totalPages && result.totalPages > 1 && (
               <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
                 {/* pagination code */}
               </div>
