@@ -218,7 +218,7 @@ export default async function VideoPage({ params, searchParams }: PageProps) {
   const cleanedTags = (video.tags ?? []).map(cleanTag);
 
   return (
-    <main className="mx-auto max-w-[1600px] px-3 md:px-5 xl:px-6 py-4">
+    <main className="mx-auto max-w-[1600px]  md:px-5 xl:px-6 ">
       <div className="flex flex-col xl:flex-row gap-5">
         {/* ── LEFT ── */}
         <section className="flex-1 min-w-0 flex flex-col gap-4">

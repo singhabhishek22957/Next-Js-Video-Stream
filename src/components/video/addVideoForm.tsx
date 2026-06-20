@@ -70,20 +70,8 @@ export default function AddVideoForm({
     status: "published",
   });
 
-  const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    setFormData((prev) => ({
-      ...prev,
-      title: value,
-    }));
-
-    if (!value.trim()) {
-      setSlug("");
-      setSlugAvailable(null);
-      return;
-    }
-
+  const handleCheckSlug = async ()=>{
+    const value = formData.title;
     const generatedSlug = await generateSlug(value);
 
     setSlug(generatedSlug);
@@ -95,7 +83,22 @@ export default function AddVideoForm({
     setSlugAvailable(result.available);
 
     setCheckingSlug(false);
-  };
+  }
+
+  // const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value;
+
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     title: value,
+  //   }));
+
+  //   if (!value.trim()) {
+  //     setSlug("");
+  //     setSlugAvailable(null);
+  //     return;
+  //   }
+  // };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -254,10 +257,15 @@ export default function AddVideoForm({
           name="title"
           placeholder="Title"
           value={formData.title}
-          onChange={handleTitleChange}
+          onChange={handleChange}
           className="w-full border p-3 rounded"
           required
         />
+        <div>
+          <button onClick={handleCheckSlug} className=" bg-blue-500 hover:bg-blue-600 text-muted-foreground py-2 px-4 rounded" >
+            check slug
+          </button>
+        </div>
         <div className="mt-2">
           <span className="text-sm text-gray-500">Slug:</span>
 
