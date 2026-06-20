@@ -14,6 +14,7 @@ interface Video {
   views: number;
   likes: number;
   createdAt: string;
+  description: string;
 }
 
 interface VideoGridProps {
