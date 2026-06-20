@@ -1,59 +1,3 @@
-// "use client";
-
-// import { useState } from "react";
-
-// import PublicHeader from "@/components/publicHeader";
-// import PublicSidebar from "@/components/publicSidebar";
-
-// import { SidebarMenuItem } from "@/types/sidebar";
-
-// interface PublicLayoutClientProps {
-//   children: React.ReactNode;
-//   menuItems: SidebarMenuItem[];
-// }
-
-// export default function PublicLayoutClient({
-//   children,
-//   menuItems,
-// }: PublicLayoutClientProps) {
-//   const [open, setOpen] =
-//     useState(false);
-
-//   return (
-//     <div className="h-screen overflow-hidden bg-background">
-//       {/* Header */}
-      
-//       <PublicHeader 
-//         open={open}
-//         setOpen={setOpen}
-//       />
-
-//       {/* Body */}
-//       <div className="flex">
-//         <PublicSidebar
-//           open={open}
-//           setOpen={setOpen}
-//           menuItems={menuItems}
-//         />
-
-//         <main
-//           className="
-//             flex-1
-//             min-w-0
-
-//             p-4
-//             md:p-6
-//             lg:p-8
-//           "
-//         >
-//           {children}
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 
 "use client";
 
@@ -63,6 +7,15 @@ import PublicHeader from "@/components/publicHeader";
 import PublicSidebar from "@/components/publicSidebar";
 
 import { SidebarMenuItem } from "@/types/sidebar";
+import Footer from "@/components/footer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 interface PublicLayoutClientProps {
   children: React.ReactNode;
@@ -112,6 +65,7 @@ export default function PublicLayoutClient({
           "
         >
           {children}
+          <Footer />
         </main>
       </div>
     </div>

@@ -1,9 +1,11 @@
+export const revalidate = 3600;
 import { notFound } from "next/navigation";
 
 import SearchBreadcrumb from "@/components/searchBreadcrumb";
 import CategoryCard from "@/components/categoryCard";
 
 import { getSearchTypeValuesAction } from "@/features/video/actions/video.action";
+import { Metadata } from "next";
 
 interface SearchTypePageProps {
   params: Promise<{
@@ -24,6 +26,32 @@ const subtitleMap: Record<string, string> = {
 };
 
 const allowedTypes = ["genre", "language", "region"];
+export async function generateMetadata({
+  params,
+}: SearchTypePageProps): Promise<Metadata> {
+  const { type } = await params;
+
+  return {
+    title: `${titleMap[type]} | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+    description: subtitleMap[type],
+
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/search/${type}`,
+    },
+
+    openGraph: {
+      title: `${titleMap[type]} | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+      description: subtitleMap[type],
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/search/${type}`,
+      type: "website",
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 export default async function SearchTypePage({ params }: SearchTypePageProps) {
   const { type } = await params;
@@ -34,6 +62,14 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
 
   const data = await getSearchTypeValuesAction(type);
   const items = Array.isArray(data) ? data : [];
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: titleMap[type],
+    description: subtitleMap[type],
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/search/${type}`,
+    numberOfItems: items.length,
+  };
 
   return (
     <div className="min-h-screen">
@@ -44,14 +80,13 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
 
           <div className="mt-6 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-2">
-                Browse
-              </p>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                {titleMap[type]}
+                Browse {titleMap[type]}
               </h1>
-              <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-md">
-                {subtitleMap[type]}
+              <p className="mt-4 max-w-3xl text-sm text-muted-foreground">
+                Explore all available {titleMap[type].toLowerCase()} and
+                discover trending videos, popular content and newly uploaded
+                videos.
               </p>
             </div>
 
@@ -70,13 +105,11 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
 
       {/* Grid section */}
       <div className="max-w-[1600px] mx-auto px-4 py-8 md:px-8 md:py-10">
-        { items.length > 0 ? (
+        {items.length > 0 ? (
           <>
             {/* Divider label */}
-          
-              <div className="flex-1 mt-14 h-px bg-white/5" >
-              </div>
-            
+
+            <div className="flex-1 mt-14 h-px bg-white/5"></div>
 
             <div
               className="
@@ -116,6 +149,12 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
           </div>
         )}
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionSchema),
+        }}
+      />
     </div>
   );
 }

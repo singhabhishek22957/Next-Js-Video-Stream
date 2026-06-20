@@ -14,6 +14,7 @@ interface Video {
   views: number;
   likes: number;
   createdAt: string;
+  description: string;
 }
 
 interface VideoCardProps {
@@ -25,7 +26,13 @@ const formatDuration = (seconds = 0): string => {
   const m = Math.floor((seconds % 3600) / 60);
   const s = Math.floor(seconds % 60);
   if (h > 0)
-    return h + ":" + m.toString().padStart(2, "0") + ":" + s.toString().padStart(2, "0");
+    return (
+      h +
+      ":" +
+      m.toString().padStart(2, "0") +
+      ":" +
+      s.toString().padStart(2, "0")
+    );
   return m + ":" + s.toString().padStart(2, "0");
 };
 
@@ -38,11 +45,11 @@ const formatViews = (views = 0): string => {
 const timeAgo = (date: string): string => {
   const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
   const intervals = [
-    { label: "year",   seconds: 31536000 },
-    { label: "month",  seconds: 2592000  },
-    { label: "day",    seconds: 86400    },
-    { label: "hour",   seconds: 3600     },
-    { label: "minute", seconds: 60       },
+    { label: "year", seconds: 31536000 },
+    { label: "month", seconds: 2592000 },
+    { label: "day", seconds: 86400 },
+    { label: "hour", seconds: 3600 },
+    { label: "minute", seconds: 60 },
   ];
   for (const i of intervals) {
     const count = Math.floor(seconds / i.seconds);
@@ -56,16 +63,37 @@ function VideoCard({ video }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const initialSrc =
-    !video.thumbnailUrl || video.thumbnailUrl === "" ? null : video.thumbnailUrl;
+    !video.thumbnailUrl || video.thumbnailUrl === ""
+      ? null
+      : video.thumbnailUrl;
 
   const [remoteFailed, setRemoteFailed] = useState(false);
   const useDefault = !initialSrc || remoteFailed;
+  const touchTimer = useRef<NodeJS.Timeout | null>(null);
 
   const onEnter = useCallback(() => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = 0;
     videoRef.current.play().catch(() => {});
   }, []);
+  const onTouchStart = () => {
+    touchTimer.current = setTimeout(() => {
+      if (!videoRef.current) return;
+
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }, 500);
+  };
+  const onTouchEnd = () => {
+    if (touchTimer.current) {
+      clearTimeout(touchTimer.current);
+    }
+
+    if (!videoRef.current) return;
+
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+  };
 
   const onLeave = useCallback(() => {
     if (!videoRef.current) return;
@@ -74,35 +102,58 @@ function VideoCard({ video }: VideoCardProps) {
   }, []);
 
   const ago = timeAgo(video.createdAt);
-  const isNew = ago.includes("hour") || ago.includes("minute") || ago === "just now";
+  const isNew =
+    ago.includes("hour") || ago.includes("minute") || ago === "just now";
 
   return (
-    <article className="group w-full rounded-lg transition-transform duration-200 hover:-translate-y-0.5">
-      <Link href={"/" + video.slug} aria-label={video.title} className="block w-full">
+    <article
+      itemScope
+      itemType="https://schema.org/VideoObject"
+      className="group w-full rounded-lg transition-transform duration-200 hover:-translate-y-0.5"
+    >
+      <meta
+        itemProp="uploadDate"
+        content={new Date(video.createdAt).toISOString()}
+      />
 
+      <meta
+        itemProp="url"
+        content={`${process.env.NEXT_PUBLIC_APP_URL}/videos/${video.slug}`}
+      />
+      <meta itemProp="description" content={video.description} />
+      <Link
+        href={`${process.env.NEXT_PUBLIC_APP_URL}/videos/${video.slug}`}
+        title={video.title}
+        aria-label={`Watch ${video.title}`}
+        className="block w-full"
+      >
         {/* Thumbnail — inline paddingBottom guarantees 16:9 height before CSS loads */}
         <div
           className="relative w-full rounded-xl overflow-hidden bg-neutral-800"
           style={{ paddingBottom: "56.25%" }}
           onMouseEnter={onEnter}
           onMouseLeave={onLeave}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           {useDefault ? (
             <Image
+              itemProp="thumbnailUrl"
               src={defaultThumbnail}
-              alt={video.title}
+              alt={`${video.title} thumbnail`}
               fill
               loading="eager"
               className="object-cover opacity-60"
             />
           ) : (
             <Image
+              itemProp="thumbnailUrl"
               src={initialSrc!}
-              alt={video.title}
+              alt={`${video.title} thumbnail`}
               fill
               unoptimized
-              // loading="lazy"
-              priority
+              loading="lazy"
+              // priority
               sizes="(max-width: 400px) 50vw, (max-width: 640px) 33vw, (max-width: 768px) 25vw, 15vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               onError={() => setRemoteFailed(true)}
@@ -134,18 +185,22 @@ function VideoCard({ video }: VideoCardProps) {
 
         {/* Info */}
         <div className="mt-1.5 px-0.5">
-          <h2 className="font-semibold text-[11px] leading-snug line-clamp-2 text-foreground group-hover:text-primary transition-colors duration-200">
+          <h3
+            itemProp="name"
+            className="font-semibold text-[11px] leading-snug line-clamp-2 text-foreground group-hover:text-primary transition-colors duration-200"
+          >
             {video.title}
-          </h2>
+          </h3>
           <div className="mt-0.5 flex items-center gap-1 flex-wrap text-[9px] text-muted-foreground">
             <span>{formatViews(video.views)} views</span>
             <span className="opacity-40">·</span>
             <span>{video.likes} likes</span>
             <span className="opacity-40">·</span>
-            <span className={isNew ? "text-green-500 font-medium" : ""}>{ago}</span>
+            <span className={isNew ? "text-green-500 font-medium" : ""}>
+              {ago}
+            </span>
           </div>
         </div>
-
       </Link>
     </article>
   );

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 interface DescriptionToggleProps {
   description: string;
-  metadata: { label: string; value: string }[];
+  metadata: { label: string; value: ReactNode }[];
   tags: string[];
 }
 
@@ -28,7 +28,8 @@ export default function DescriptionToggle({
           </p>
           {!open && (
             <p className="text-xs text-muted-foreground truncate max-w-[260px] sm:max-w-[400px]">
-              — {description.slice(0, 80)}{description.length > 80 ? "..." : ""}
+              — {description.slice(0, 80)}
+              {description.length > 80 ? "..." : ""}
             </p>
           )}
         </div>
@@ -61,7 +62,7 @@ export default function DescriptionToggle({
                 <p className="text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground mb-0.5">
                   {label}
                 </p>
-                <p className="text-sm">{value}</p>
+                <div className="text-sm">{value}</div>
               </div>
             ))}
           </div>

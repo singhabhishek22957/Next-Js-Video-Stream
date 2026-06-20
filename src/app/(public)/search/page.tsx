@@ -1,7 +1,9 @@
-
+export const revalidate = 300;
 import SearchBreadcrumb from "@/components/searchBreadcrumb";
 import VideoGrid from "@/components/video/videoGrid";
 import { searchVideosAction } from "@/features/video/actions/video.action";
+import { Metadata } from "next";
+import Link from "next/link";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -13,6 +15,46 @@ interface SearchPageProps {
 /* Build search URL outside JSX — avoids template literal parse errors */
 function searchUrl(keyword: string, pageNo: number): string {
   return "/search?q=" + encodeURIComponent(keyword) + "&page=" + pageNo;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: SearchPageProps): Promise<Metadata> {
+  const { q = "" } = await searchParams;
+
+  const keyword = q.trim();
+
+  if (!keyword) {
+    return {
+      title: `Search Videos | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+      description: "Search videos by title, genre, language, region and more.",
+    };
+  }
+
+  return {
+    title: `${keyword} Videos | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+    description: `Search results for ${keyword}. Watch trending and popular videos.`,
+
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/search?q=${encodeURIComponent(
+        keyword,
+      )}`,
+    },
+
+    openGraph: {
+      title: `${keyword} Videos`,
+      description: `Search results for ${keyword}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/search?q=${encodeURIComponent(
+        keyword,
+      )}`,
+      type: "website",
+    },
+
+    robots: {
+      index: false,
+      follow: true,
+    },
+  };
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
@@ -37,7 +79,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 Find anything
               </h1>
               <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-md">
-                Search across videos, genres, languages, regions, actors, tags and more.
+                Search across videos, genres, languages, regions, actors, tags
+                and more.
               </p>
             </div>
           </div>
@@ -63,6 +106,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   /* Pre-build pagination URLs */
   const prevUrl = searchUrl(keyword, currentPage - 1);
   const nextUrl = searchUrl(keyword, currentPage + 1);
+  const searchSchema = {
+    "@context": "https://schema.org",
+    "@type": "SearchResultsPage",
+    name: `Search results for ${keyword}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/search?q=${encodeURIComponent(
+      keyword,
+    )}`,
+  };
 
   return (
     <div className="min-h-screen">
@@ -77,7 +128,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 Search Results
               </p>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                "{keyword}"
+                 Search: {keyword}
               </h1>
               <p className="mt-3 text-sm md:text-base text-muted-foreground">
                 {hasVideos
@@ -89,7 +140,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             {/* Count badge */}
             <div className="mt-4 sm:mt-0 self-start sm:self-auto">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium">
-                <span className="text-primary font-bold">{result.totalVideos}</span>
+                <span className="text-primary font-bold">
+                  {result.totalVideos}
+                </span>
                 <span className="text-muted-foreground">videos found</span>
               </span>
             </div>
@@ -118,15 +171,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             {/* ── Pagination ── */}
             {result.totalPages > 1 && (
               <div className="mt-12 flex justify-center items-center gap-2 flex-wrap">
-
                 {/* Prev */}
                 {currentPage > 1 && (
-                  <a
+                  <Link
                     href={prevUrl}
                     className="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm hover:bg-white/10 transition-colors"
                   >
                     ← Prev
-                  </a>
+                  </Link>
                 )}
 
                 {/* Page numbers with ellipsis */}
@@ -159,28 +211,33 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   if (!show) return null;
 
                   const pageUrl = searchUrl(keyword, pageNo);
-                  const activeClass = "bg-primary border-primary text-white shadow-lg shadow-primary/25";
-                  const inactiveClass = "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground";
+                  const activeClass =
+                    "bg-primary border-primary text-white shadow-lg shadow-primary/25";
+                  const inactiveClass =
+                    "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground";
 
                   return (
-                    <a
+                    <Link
                       key={pageNo}
                       href={pageUrl}
-                      className={"min-w-[36px] h-9 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors duration-200 " + (isActive ? activeClass : inactiveClass)}
+                      className={
+                        "min-w-[36px] h-9 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors duration-200 " +
+                        (isActive ? activeClass : inactiveClass)
+                      }
                     >
                       {pageNo}
-                    </a>
+                    </Link>
                   );
                 })}
 
                 {/* Next */}
                 {currentPage < result.totalPages && (
-                  <a
+                  <Link
                     href={nextUrl}
                     className="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm hover:bg-white/10 transition-colors"
                   >
                     Next →
-                  </a>
+                  </Link>
                 )}
               </div>
             )}
@@ -189,10 +246,18 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <VideoGrid
             videos={[]}
             emptyMessage="No videos found"
-            emptySubMessage={"No results for \"" + keyword + "\". Try a different keyword."}
+            emptySubMessage={
+              'No results for "' + keyword + '". Try a different keyword.'
+            }
           />
         )}
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(searchSchema),
+        }}
+      />
     </div>
   );
 }

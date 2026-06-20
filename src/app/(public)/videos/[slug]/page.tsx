@@ -8,6 +8,8 @@ import LikeButton from "@/components/video/likeButton";
 import ShareButton from "@/components/video/shareButton";
 import VideoViewTracker from "@/components/video/videoViewTracker";
 import { Suspense } from "react";
+import type { Metadata } from "next";
+  import Link from "next/link";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -34,6 +36,74 @@ function timeAgo(date: Date | string) {
 function cleanTag(tag: string) {
   return tag.startsWith("#") ? tag.slice(1) : tag;
 }
+function toISO8601Duration(seconds: number) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+
+  return `PT${h ? `${h}H` : ""}${m ? `${m}M` : ""}${s}S`;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const result = await getVideoBySlugAction(slug);
+
+  if (!result.success || !result.video) {
+    return {
+      title: "Video Not Found",
+    };
+  }
+
+  const video = result.video;
+
+  return {
+    title: `${video.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+    description: video.description?.trim() || `Watch ${video.title} online.`,
+
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/videos/${video.slug}`,
+    },
+
+    openGraph: {
+      title: `${video.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+      description: video.description?.trim() || `Watch ${video.title} online.`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/videos/${video.slug}`,
+      images: [
+        {
+          url: video.thumbnailUrl,
+          width: 1280,
+          height: 720,
+          alt: video.title,
+        },
+      ],
+      type: "video.other",
+      siteName: process.env.NEXT_PUBLIC_APP_NAME,
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: `${video.title} | ${process.env.NEXT_PUBLIC_APP_NAME}`,
+      description: video.description?.trim() || `Watch ${video.title} online.`,
+      images: [video.thumbnailUrl],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    keywords: [
+      video.title,
+      ...(video.actors ?? []),
+      ...(video.genre?.map((g: any) => g.name) ?? []),
+      video.language?.name,
+      video.region?.name,
+    ].filter(Boolean),
+  };
+}
 
 export default async function VideoPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
@@ -47,20 +117,103 @@ export default async function VideoPage({ params, searchParams }: PageProps) {
 
   const video = result.video;
 
+
+
   const metadata = [
     {
-      label: "Actors",
-      value: video.actors?.length ? video.actors.join(", ") : "N/A",
-    },
-    {
       label: "Genre",
-      value: video.genre?.length
-        ? video.genre.map((g: any) => g.name).join(", ")
-        : "N/A",
+      value: (
+        <div className="flex flex-wrap gap-2">
+          {video.genre?.map((g: any) => (
+            <Link
+              key={g.slug}
+              href={`/search/genre/${g.name}`}
+              className="text-primary hover:underline"
+            >
+              {g.name}
+            </Link>
+          ))}
+        </div>
+      ),
     },
-    { label: "Language", value: video.language?.name || "N/A" },
-    { label: "Region", value: video.region?.name || "N/A" },
+
+    {
+      label: "Language",
+      value: (
+        <Link
+          href={`/search/language/${video.language.name}`}
+          className="text-primary hover:underline"
+        >
+          {video.language.name}
+        </Link>
+      ),
+    },
+
+    {
+      label: "Region",
+      value: (
+        <Link
+          href={`/search/region/${video.region.name}`}
+          className="text-primary hover:underline"
+        >
+          {video.region.name}
+        </Link>
+      ),
+    },
   ];
+
+  const videoSchema = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: video.title,
+    description: video.description || video.title,
+    thumbnailUrl: [video.thumbnailUrl],
+    uploadDate: video.createdAt,
+    duration: toISO8601Duration(video.duration),
+    contentUrl: video.videoUrl,
+    embedUrl: `${process.env.NEXT_PUBLIC_APP_URL}/videos/${video.slug}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/videos/${video.slug}`,
+    publisher: {
+      "@type": "Organization",
+      name: `${process.env.NEXT_PUBLIC_APP_NAME}`,
+      logo: {
+        "@type": "ImageObject",
+        url: `${process.env.NEXT_PUBLIC_LOGO_URL}`,
+      },
+    },
+    interactionStatistic: {
+      "@type": "InteractionCounter",
+      interactionType: {
+        "@type": "WatchAction",
+      },
+      userInteractionCount: video.views,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: process.env.NEXT_PUBLIC_APP_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Videos",
+        item: `${process.env.NEXT_PUBLIC_APP_URL}/videos`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: video.title,
+        item: `${process.env.NEXT_PUBLIC_APP_URL}/videos/${video.slug}`,
+      },
+    ],
+  };
 
   const cleanedTags = (video.tags ?? []).map(cleanTag);
 
@@ -151,7 +304,7 @@ export default async function VideoPage({ params, searchParams }: PageProps) {
             tags={cleanedTags}
           />
           {/* ACTOR / GENRE GRID — below player */}
-          
+
           <Suspense fallback={<GridSkeleton />}>
             <ActorGenreGrid
               slug={video.slug}
@@ -174,6 +327,18 @@ export default async function VideoPage({ params, searchParams }: PageProps) {
           </Suspense>
         </aside>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(videoSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
     </main>
   );
 }

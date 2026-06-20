@@ -81,14 +81,9 @@ export default function PublicHeader({ open, setOpen }: PublicHeaderProps) {
 
             <Link
               href="/"
-              className="
-                font-bold
-
-                text-xl
-                md:text-2xl
-
-                text-primary
-              "
+              title="StreamFlix Home"
+              aria-label="StreamFlix Home"
+              className="font-bold text-xl md:text-2xl text-primary"
             >
               StreamFlix
             </Link>
@@ -96,6 +91,7 @@ export default function PublicHeader({ open, setOpen }: PublicHeaderProps) {
 
           {/* Search */}
           <form
+            role="search"
             onSubmit={handleSearch}
             className="
               hidden md:flex
@@ -113,6 +109,7 @@ export default function PublicHeader({ open, setOpen }: PublicHeaderProps) {
           >
             <input
               type="text"
+              aria-label="Search videos"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="Search videos..."
@@ -203,7 +200,11 @@ export default function PublicHeader({ open, setOpen }: PublicHeaderProps) {
             md:hidden
           "
         >
-          <form onSubmit={handleSearch} className="p-4 flex gap-2">
+          <form
+            onSubmit={handleSearch}
+            role="search"
+            className="p-4 flex gap-2"
+          >
             <button
               type="button"
               onClick={() => setMobileSearch(false)}
@@ -214,6 +215,7 @@ export default function PublicHeader({ open, setOpen }: PublicHeaderProps) {
 
             <input
               autoFocus
+              aria-label="Search videos"
               type="text"
               placeholder="Search videos..."
               value={keyword}

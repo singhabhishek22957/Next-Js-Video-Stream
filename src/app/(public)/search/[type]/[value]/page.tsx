@@ -1,6 +1,7 @@
 import SearchBreadcrumb from "@/components/searchBreadcrumb";
 import VideoGrid from "@/components/video/videoGrid";
 import { getVideosByFilterAction } from "@/features/video/actions/video.action";
+import { Metadata } from "next";
 
 interface SearchValuePageProps {
   params: Promise<{
@@ -10,6 +11,49 @@ interface SearchValuePageProps {
   searchParams: Promise<{
     page?: string;
   }>;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{
+    type: string;
+    value: string;
+  }>;
+}): Promise<Metadata> {
+  const { type, value } = await params;
+
+  const title = `${value} ${type} Videos | ${process.env.NEXT_PUBLIC_APP_NAME}`;
+
+  const description = `Watch ${value} ${type} videos online. Explore trending, popular and latest videos in ${value}.`;
+
+  return {
+    title,
+    description,
+
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_APP_URL}/search/${type}/${value}`,
+    },
+
+    openGraph: {
+      title,
+      description,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/search/${type}/${value}`,
+      type: "website",
+      siteName: process.env.NEXT_PUBLIC_APP_NAME,
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
 }
 
 export default async function SearchValuePage({
@@ -23,6 +67,13 @@ export default async function SearchValuePage({
   const result = await getVideosByFilterAction(type, value, currentPage);
 
   const hasVideos = result.videos.length > 0;
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${value} ${type} Videos`,
+    description: `Browse videos filtered by ${type}: ${value}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/search/${type}/${value}`,
+  };
 
   return (
     <div className="min-h-screen">
@@ -37,13 +88,12 @@ export default async function SearchValuePage({
                 {type}
               </p>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight capitalize">
-                {value}
+                {value} {type} Videos
               </h1>
-              <p className="mt-3 text-sm md:text-base text-muted-foreground">
-                Showing results filtered by{" "}
-                <span className="text-foreground font-medium capitalize">
-                  {type} › {value}
-                </span>
+              <p className="mt-4 max-w-3xl text-sm text-muted-foreground">
+                Watch the latest {value} {type} videos online. Discover
+                trending, popular and recently uploaded videos related to{" "}
+                {value}.
               </p>
             </div>
 
@@ -85,6 +135,12 @@ export default async function SearchValuePage({
           />
         )}
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionSchema),
+        }}
+      />
     </div>
   );
 }
