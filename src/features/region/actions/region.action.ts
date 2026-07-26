@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath , revalidateTag} from "next/cache";
 import { connectDB } from "@/lib/db";
 import Region from "@/models/region.model";
 
@@ -38,6 +38,7 @@ export async function createRegionAction(
         code.toUpperCase(),
     });
 
+    revalidateTag("regions", "max");
     revalidatePath(
       "/admin/regions"
     );
@@ -127,6 +128,7 @@ export async function updateRegionAction(
       }
     );
 
+    revalidateTag("regions", "max");
     revalidatePath(
       "/admin/regions"
     );
@@ -155,6 +157,7 @@ export async function deleteRegionAction(
       id
     );
 
+    revalidateTag("regions", "max");
     revalidatePath(
       "/admin/regions"
     );
@@ -195,6 +198,7 @@ export async function toggleRegionStatusAction(
 
     await region.save();
 
+    revalidateTag("regions", "max");
     revalidatePath(
       "/admin/regions"
     );

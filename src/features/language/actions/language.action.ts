@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/db";
 import Language from "@/models/language.model";
 
@@ -38,6 +38,7 @@ export async function createLanguageAction(
         code.toUpperCase(),
     });
 
+    revalidateTag("languages", "max");
     revalidatePath(
       "/admin/languages"
     );
@@ -127,6 +128,7 @@ export async function updateLanguageAction(
       }
     );
 
+    revalidateTag("languages", "max");
     revalidatePath(
       "/admin/languages"
     );
@@ -155,6 +157,7 @@ export async function deleteLanguageAction(
       id
     );
 
+    revalidateTag("languages", "max");
     revalidatePath(
       "/admin/languages"
     );
@@ -195,6 +198,7 @@ export async function toggleLanguageStatusAction(
 
     await language.save();
 
+    revalidateTag("languages", "max");
     revalidatePath(
       "/admin/languages"
     );
