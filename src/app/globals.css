@@ -10,7 +10,7 @@
 /* =========================
    LIGHT THEME
 ========================= */
-:root {
+/* :root {
   --surface: #FFFFFF;
 
   --primary: oklch(0.205 0 0);
@@ -74,12 +74,63 @@
   --sidebar-border: oklch(0.922 0 0);
 
   --sidebar-ring: oklch(0.708 0 0);
+} */
+
+:root {
+  --background: #fff9fb;
+  --surface: #ffffff;
+
+  --foreground: #111827;
+
+  --primary: #ff4d8d;
+  --primary-foreground: #ffffff;
+
+  --secondary: #ffe5ef;
+  --secondary-foreground: #ff4d8d;
+
+  --muted: #fff1f6;
+  --muted-foreground: #6b7280;
+
+  --accent: #ffd6e5;
+  --accent-foreground: #ff2f78;
+
+  --border: #f3d3df;
+  --input: #f3d3df;
+  --ring: #ff4d8d;
+
+  --card: #ffffff;
+  --card-foreground: #111827;
+
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+
+  --destructive: #ef4444;
+
+  --chart-1: #ff4d8d;
+  --chart-2: #ff85b3;
+  --chart-3: #ffb3cf;
+  --chart-4: #ffcce0;
+  --chart-5: #ffe5ef;
+
+  --radius: 1rem;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #111827;
+
+  --sidebar-primary: #ff4d8d;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #ffe5ef;
+  --sidebar-accent-foreground: #ff4d8d;
+
+  --sidebar-border: #f3d3df;
+  --sidebar-ring: #ff4d8d;
 }
 
 /* =========================
    DARK THEME
 ========================= */
-.dark {
+/* .dark {
   --background: oklch(0.145 0 0);
   --surface: #111111;
 
@@ -140,8 +191,57 @@
   --sidebar-border: oklch(1 0 0 / 10%);
 
   --sidebar-ring: oklch(0.556 0 0);
-}
+} */
 
+
+.dark {
+  --background: #0f1117;
+  --surface: #181c25;
+
+  --foreground: #ffffff;
+
+  --primary: #ff4d8d;
+  --primary-foreground: #ffffff;
+
+  --secondary: #232836;
+  --secondary-foreground: #ffffff;
+
+  --muted: #1f2430;
+  --muted-foreground: #9ca3af;
+
+  --accent: #2a3040;
+  --accent-foreground: #ff85b3;
+
+  --border: #2d3445;
+  --input: #2d3445;
+  --ring: #ff4d8d;
+
+  --card: #181c25;
+  --card-foreground: #ffffff;
+
+  --popover: #181c25;
+  --popover-foreground: #ffffff;
+
+  --destructive: #ef4444;
+
+  --chart-1: #ff4d8d;
+  --chart-2: #ff85b3;
+  --chart-3: #7c5cff;
+  --chart-4: #9f7aea;
+  --chart-5: #c4b5fd;
+
+  --sidebar: #141922;
+  --sidebar-foreground: #ffffff;
+
+  --sidebar-primary: #ff4d8d;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #232836;
+  --sidebar-accent-foreground: #ffffff;
+
+  --sidebar-border: #2d3445;
+  --sidebar-ring: #ff4d8d;
+}
 /* =========================
    TAILWIND V4 TOKENS
 ========================= */
@@ -219,5 +319,31 @@ body {
   }
   html {
     @apply font-sans;
+  }
+}
+
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  ::selection {
+    background: rgba(255, 77, 141, 0.25);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #ff85b3;
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
 }

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { seedAdmin } from "./seedAdmin";
 
 const MONGO_URL = process.env.MONGO_URL!;
 const MONGO_DB = process.env.MONGO_DB!;
@@ -16,6 +17,8 @@ export const connectDB = async (): Promise<void> => {
     isConnected = conn.connections[0].readyState === 1;
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+    await seedAdmin();
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
     process.exit(1);

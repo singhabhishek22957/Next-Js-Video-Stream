@@ -4,11 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
-import {
-  FaUser,
-  FaEnvelope,
-  FaLock,
-} from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 
 import { toast } from "sonner";
 
@@ -18,56 +14,36 @@ import { registerAction } from "@/features/auth/actions/userCRUD.action";
 export default function RegisterPage() {
   const router = useRouter();
 
-  const [isPending, startTransition] =
-    useTransition();
+  const [isPending, startTransition] = useTransition();
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [formData, setFormData] =
-    useState({
-      name: "",
-      email: "",
-      password: "",
-    });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (
-      formData.password !==
-      confirmPassword
-    ) {
-      toast.error(
-        "Passwords do not match"
-      );
+    if (formData.password !== confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
 
     startTransition(async () => {
-      const result =
-        await registerAction(
-          formData
-        );
+      const result = await registerAction(formData);
 
       if (!result.success) {
-        toast.error(
-          result.message ||
-            "Registration failed"
-        );
+        toast.error(result.message || "Registration failed");
 
         return;
       }
 
-      toast.success(
-        result.message ||
-          "Account created successfully"
-      );
+      toast.success(result.message || "Account created successfully");
 
       setTimeout(() => {
         router.push("/login");
@@ -78,7 +54,6 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* LEFT SIDE */}
-      
 
       {/* RIGHT SIDE */}
       <div
@@ -135,8 +110,7 @@ export default function RegisterPage() {
                 text-muted-foreground
               "
             >
-              Start your streaming
-              journey today
+              Start your streaming journey today
             </p>
           </div>
 
@@ -187,8 +161,7 @@ export default function RegisterPage() {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      name:
-                        e.target.value,
+                      name: e.target.value,
                     })
                   }
                   placeholder="John Doe"
@@ -244,8 +217,7 @@ export default function RegisterPage() {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      email:
-                        e.target.value,
+                      email: e.target.value,
                     })
                   }
                   placeholder="john@example.com"
@@ -295,20 +267,13 @@ export default function RegisterPage() {
                 <FaLock className="text-muted-foreground" />
 
                 <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   required
-                  value={
-                    formData.password
-                  }
+                  value={formData.password}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      password:
-                        e.target.value,
+                      password: e.target.value,
                     })
                   }
                   placeholder="••••••••"
@@ -324,19 +289,13 @@ export default function RegisterPage() {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowPassword(
-                      !showPassword
-                    )
-                  }
+                  onClick={() => setShowPassword(!showPassword)}
                   className="
                     text-primary
                     text-sm
                   "
                 >
-                  {showPassword
-                    ? "Hide"
-                    : "Show"}
+                  {showPassword ? "Hide" : "Show"}
                 </button>
               </div>
 
@@ -349,10 +308,8 @@ export default function RegisterPage() {
                   text-muted-foreground
                 "
               >
-                At least 8 characters,
-                one uppercase letter,
-                one lowercase letter
-                and one number.
+                At least 8 characters, one uppercase letter, one lowercase
+                letter and one number.
               </p>
             </div>
 
@@ -390,20 +347,10 @@ export default function RegisterPage() {
                 <FaLock className="text-muted-foreground" />
 
                 <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   required
-                  value={
-                    confirmPassword
-                  }
-                  onChange={(e) =>
-                    setConfirmPassword(
-                      e.target.value
-                    )
-                  }
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
                   className="
                     ml-3

@@ -55,7 +55,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative border-b border-white/5 bg-gradient-to-b from-white/5 to-transparent px-4 py-10 md:px-8 md:py-14">
+      <div className="relative border-b border-border bg-gradient-to-b from-secondary/50 to-background px-4 py-10 md:px-8 md:py-14">
         <div className="max-w-[1600px] mx-auto">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-2">
             <Home size={16} />
@@ -71,7 +71,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </p>
 
           <div className="mt-6">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-1.5 text-sm font-medium shadow-sm">
               <span className="text-primary font-bold">
                 {result.totalVideos}
               </span>
@@ -97,7 +97,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             {currentPage > 1 && (
               <Link
                 href={`?page=${currentPage - 1}`}
-                className="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm hover:bg-white/10 transition-colors"
+                className="px-3 py-2 rounded-xl border border-border bg-card text-sm hover:bg-secondary transition-colors"
               >
                 ← Prev
               </Link>
@@ -139,8 +139,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   className={
                     "min-w-[36px] h-9 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors duration-200 " +
                     (isActive
-                      ? "bg-primary border-primary text-white shadow-lg shadow-primary/25"
-                      : "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground")
+                      ? "bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20"
+                      : "border-border bg-card text-muted-foreground hover:bg-secondary hover:text-foreground")
                   }
                 >
                   {pageNo}
@@ -151,7 +151,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             {currentPage < result.totalPages && (
               <Link
                 href={`?page=${currentPage + 1}`}
-                className="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-sm hover:bg-white/10 transition-colors"
+                className="px-3 py-2 rounded-xl border border-border bg-card text-sm hover:bg-secondary transition-colors"
               >
                 Next →
               </Link>

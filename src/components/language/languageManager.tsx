@@ -96,7 +96,7 @@ export default function LanguageManager({ languages }: Props) {
           />
           <input
             placeholder="Thumbnail URL"
-            value={formData.code}
+            value={formData.thumbnailUrl}
             onChange={(e) =>
               setFormData({
                 ...formData,

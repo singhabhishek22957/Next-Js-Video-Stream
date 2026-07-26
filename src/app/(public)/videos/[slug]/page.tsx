@@ -178,7 +178,7 @@ export default async function VideoPage({ params, searchParams }: PageProps) {
       name: `${process.env.NEXT_PUBLIC_APP_NAME}`,
       logo: {
         "@type": "ImageObject",
-        url: `${process.env.NEXT_PUBLIC_LOGO_URL}`,
+        url: `${process.env.NEXT_PUBLIC_APP_URL}/${process.env.NEXT_PUBLIC_LOGO_URL}`,
       },
     },
     interactionStatistic: {

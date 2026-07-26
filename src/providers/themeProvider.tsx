@@ -12,7 +12,7 @@ export default function ThemeProvider({
       attribute="class"
        defaultTheme="dark"
       enableSystem={false}
-      storageKey="streamflix-theme"
+      storageKey="desixyz-theme"
     >
       {children}
     </NextThemesProvider>

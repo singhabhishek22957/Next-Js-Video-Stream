@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, Search, X } from "lucide-react";
-
+import Image from "next/image";
 import ThemeToggle from "./themeToggle";
 import { useRouter } from "next/navigation";
 
@@ -80,13 +80,21 @@ export default function PublicHeader({ open, setOpen }: PublicHeaderProps) {
             </button>
 
             <Link
-              href="/"
-              title="StreamFlix Home"
-              aria-label="StreamFlix Home"
-              className="font-bold text-xl md:text-2xl text-primary"
-            >
-              StreamFlix
-            </Link>
+  href="/"
+  title="Desixyz Home"
+  aria-label="Desixyz Home"
+  className="flex items-center gap-3 font-bold text-xl md:text-2xl text-primary"
+>
+  <Image
+    src="/logo.png"
+    alt="Desixyz Logo"
+    width={48}
+    height={48}
+    className="h-12 w-12 md:h-14 md:w-14 object-contain"
+    priority
+  />
+  <span>Desixyz</span>
+</Link>
           </div>
 
           {/* Search */}

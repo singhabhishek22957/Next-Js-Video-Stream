@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart } from "lucide-react";
-
+import Image from "next/image";
 import { Sheet, SheetContent } from "./ui/sheet";
 import MenuItems from "./menuItems";
 
@@ -35,33 +35,7 @@ export default function PublicSidebar({
           "
         >
           <div className="flex max-h-screen h-screen flex-col">
-            {/* Header */}
-            {/* <div
-              className="
-                h-16
-
-                flex
-                items-center
-
-                px-6
-
-                border-b
-                border-border
-
-                shrink-0
-              "
-            >
-              <h1
-                className="
-                  text-2xl
-                  font-bold
-
-                  text-primary
-                "
-              >
-                StreamFlix
-              </h1>
-            </div> */}
+            
 
             {/* Scrollable Menu */}
             <div
@@ -92,7 +66,7 @@ export default function PublicSidebar({
                 text-muted-foreground
               "
             >
-              <span>StreamFlix</span>
+             <Image src="/logo.png" alt="Logo" width={48} height={48} />
 
               <span className="flex items-center gap-1">
                 <Heart className="h-3 w-3 fill-current" />
@@ -125,33 +99,7 @@ export default function PublicSidebar({
     border-border
         "
       >
-        {/* Header */}
-        {/* <div
-          className="
-            h-16
-
-            flex
-            items-center
-
-            px-6
-
-            border-b
-            border-border
-
-            shrink-0
-          "
-        >
-          <h1
-            className="
-              text-2xl
-              font-bold
-
-              text-primary
-            "
-          >
-            StreamFlix
-          </h1>
-        </div> */}
+      
 
         {/* Scrollable Menu */}
         <div
@@ -182,10 +130,10 @@ export default function PublicSidebar({
             text-muted-foreground
           "
         >
-          <span>StreamFlix</span>
+         <Image src="/logo.png" alt="Logo" width={48} height={48} />
 
-          <span className="flex items-center gap-1">
-            <Heart className="h-3 w-3 fill-current" />
+          <span className="flex text-primary items-center gap-1">
+            <Heart className="h-3 text-primary w-3 fill-current" />
             Made with passion
           </span>
         </div>

@@ -1,10 +1,10 @@
 "use client";
-
+import Image from "next/image";
 import { useState, useTransition } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { BiHide ,BiShow } from "react-icons/bi";
+import { BiHide, BiShow } from "react-icons/bi";
 
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import ThemeToggle from "@/components/themeToggle";
@@ -23,9 +23,7 @@ export default function LoginPage() {
     password: "",
   });
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setError("");
@@ -51,14 +49,20 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background flex">
       {/* Left Side */}
       <div className="hidden lg:flex w-1/2 flex-col justify-center px-16 bg-surface border-r border-border">
-        <h1 className="text-5xl font-bold text-primary">
-          StreamFlix
+        <h1 className="flex items-center gap-3 text-5xl font-bold text-primary">
+          <Image
+            src="/logo.png"
+            alt="Desixyz Logo"
+            width={48}
+            height={48}
+            className="rounded-lg"
+          />
+          <span>Desixyz</span>
         </h1>
 
         <p className="mt-4 text-lg  text-muted-foreground">
-          Watch trending videos and discover
-          premium content from creators around
-          the world.
+          Watch trending videos and discover premium content from creators
+          around the world.
         </p>
       </div>
 
@@ -70,19 +74,12 @@ export default function LoginPage() {
 
         <div className="w-full max-w-md bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-xl">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-foreground">
-              Welcome Back
-            </h2>
+            <h2 className="text-3xl font-bold text-foreground">Welcome Back</h2>
 
-            <p className="mt-2 text-muted-foreground">
-              Login to your account
-            </p>
+            <p className="mt-2 text-muted-foreground">Login to your account</p>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="mt-8 space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             {/* Email */}
             <div>
               <label className="block mb-2 text-sm text-muted-foreground">
@@ -118,11 +115,7 @@ export default function LoginPage() {
                 <FaLock className="text-muted-foreground" />
 
                 <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={(e) =>
@@ -137,34 +130,22 @@ export default function LoginPage() {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowPassword(
-                      !showPassword
-                    )
-                  }
+                  onClick={() => setShowPassword(!showPassword)}
                   className="text-primary text-sm"
                 >
-                  {showPassword
-                    ? <BiHide size={20} />
-                    :<BiShow size={20} />}
+                  {showPassword ? <BiHide size={20} /> : <BiShow size={20} />}
                 </button>
               </div>
             </div>
 
-            {error && (
-              <div className="text-sm text-red-500">
-                {error}
-              </div>
-            )}
+            {error && <div className="text-sm text-red-500">{error}</div>}
 
             <button
               type="submit"
               disabled={isPending}
               className="w-full bg-primary hover:bg-muted-foreground text-white font-semibold py-3 rounded-xl transition"
             >
-              {isPending
-                ? "Logging In..."
-                : "Login"}
+              {isPending ? "Logging In..." : "Login"}
             </button>
 
             <div className="flex justify-between text-sm">
@@ -178,11 +159,11 @@ export default function LoginPage() {
               <span>
                 Don&apos;t have an account?
                 <Link
-                href="/register"
-                className=" ml-1 text-muted-foreground hover:text-primary"
-              >
-                Create Account
-              </Link>
+                  href="/register"
+                  className=" ml-1 text-muted-foreground hover:text-primary"
+                >
+                  Create Account
+                </Link>
               </span>
             </div>
           </form>
