@@ -41,6 +41,20 @@ export default function VideoJSPlayer({
     );
   }
 
+  const getSourceType = (url: string) => {
+  const cleanUrl = url.split("?")[0].toLowerCase();
+
+  if (cleanUrl.endsWith(".m3u8")) {
+    return "application/x-mpegURL";
+  }
+
+  if (cleanUrl.endsWith(".mp4")) {
+    return "video/mp4";
+  }
+
+  return "video/mp4";
+};
+
   const videoJsOptions = {
     controls: true,
 
@@ -64,7 +78,7 @@ export default function VideoJSPlayer({
     sources: [
       {
         src,
-        type: "application/x-mpegURL",
+        type: getSourceType(src),
       },
     ],
 

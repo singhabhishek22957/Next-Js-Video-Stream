@@ -8,6 +8,7 @@ let isConnected = false;
 
 export const connectDB = async (): Promise<void> => {
   try {
+    
     if (isConnected) return;
 
     const conn = await mongoose.connect(

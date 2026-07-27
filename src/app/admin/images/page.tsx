@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
-
+import { toast } from "sonner";
 interface ImageItem {
   _id: string;
   title: string;
@@ -44,7 +44,7 @@ export default function ImagesPage() {
     e.preventDefault();
 
     if (!title || !file) {
-      return alert(
+      return toast.error(
         "Title and image required",
       );
     }
@@ -81,16 +81,16 @@ export default function ImagesPage() {
 
         await loadImages();
 
-        alert(
+        toast.success(
           "Image uploaded successfully",
         );
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
       console.error(error);
 
-      alert("Upload failed");
+      toast.error("Upload failed");
     } finally {
       setLoading(false);
     }
@@ -103,7 +103,7 @@ export default function ImagesPage() {
       url,
     );
 
-    alert("URL copied");
+    totast.success("URL copied");
   }
 
   async function deleteImage(
@@ -129,7 +129,7 @@ export default function ImagesPage() {
       if (data.success) {
         await loadImages();
       } else {
-        alert(data.message);
+        toast(data.message);
       }
     } catch (error) {
       console.error(error);

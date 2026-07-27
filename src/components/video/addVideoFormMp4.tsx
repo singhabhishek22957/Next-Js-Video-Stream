@@ -27,7 +27,7 @@ interface AddVideoFormProps {
   }[];
 }
 
-export default function AddVideoForm({
+export default function AddVideoFormMp4({
   genres,
   regions,
   languages,
@@ -37,14 +37,7 @@ export default function AddVideoForm({
   const [loading, setLoading] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
-  const [previewVideoPreview, setPreviewVideoPreview] = useState<string | null>(
-    null,
-  );
-  const [slug, setSlug] = useState("");
-
-  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
-
-  const [checkingSlug, setCheckingSlug] = useState(false);
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -53,9 +46,7 @@ export default function AddVideoForm({
 
     thumbnail: null as File | null,
 
-    previewVideo: null as File | null,
-
-    videoFiles: [] as File[],
+    video: null as File | null,
 
     actors: [""],
 
@@ -69,8 +60,13 @@ export default function AddVideoForm({
 
     status: "published",
   });
+  const [slug, setSlug] = useState("");
 
-  const handleCheckSlug = async ()=>{
+  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
+
+  const [checkingSlug, setCheckingSlug] = useState(false);
+
+  const handleCheckSlug = async () => {
     const value = formData.title;
     const generatedSlug = await generateSlug(value);
 
@@ -83,7 +79,7 @@ export default function AddVideoForm({
     setSlugAvailable(result.available);
 
     setCheckingSlug(false);
-  }
+  };
 
   // const handleTitleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   //   const value = e.target.value;
@@ -120,21 +116,27 @@ export default function AddVideoForm({
         return;
       }
 
-      if (name === "previewVideo") {
-        setFormData((prev) => ({
-          ...prev,
-          previewVideo: file,
-        }));
+      if (name === "video") {
+        const url = URL.createObjectURL(file);
 
-        setPreviewVideoPreview(URL.createObjectURL(file));
+        setVideoPreview(url);
 
-        return;
-      }
-      if (name === "videoFiles") {
-        setFormData((prev) => ({
-          ...prev,
-          videoFiles: Array.from(files),
-        }));
+        const videoElement = document.createElement("video");
+
+        videoElement.preload = "metadata";
+
+        videoElement.src = url;
+
+        videoElement.onloadedmetadata = () => {
+          setFormData((prev) => ({
+            ...prev,
+            video: file,
+            duration: Math.round(videoElement.duration).toString(),
+          }));
+
+          URL.revokeObjectURL(url);
+        };
+
         return;
       }
     }
@@ -213,20 +215,15 @@ export default function AddVideoForm({
         data.append("thumbnail", formData.thumbnail);
       }
 
-      if (formData.previewVideo) {
-        data.append("previewVideo", formData.previewVideo);
+      if (formData.video) {
+        data.append("video", formData.video);
       }
 
-      formData.videoFiles.forEach((file) => {
-        data.append("videoFiles", file);
-      });
-
-      const response: any = await axios.post("/api/admin/videos", data, {
+      const response: any = await axios.post("/api/admin/videosmp4", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
 
-        
         onUploadProgress: (progressEvent) => {
           const percent = Math.round(
             (progressEvent.loaded * 100) / (progressEvent.total || 1),
@@ -236,22 +233,7 @@ export default function AddVideoForm({
         },
       });
 
-
       toast.success("Video Uploaded Successfully");
-      setFormData({
-        title: "",
-        description: "",
-        duration: "",
-        thumbnail: null,
-        previewVideo: null,
-        videoFiles: [],
-        actors: [""],
-        genre: [],
-        region: "",
-        language: "",
-        tags: "",
-        status: "published",
-      })
     } catch (error) {
       console.error("Error uploading video:", error);
 
@@ -265,7 +247,7 @@ export default function AddVideoForm({
     <div className="max-w-6xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Add Video</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form  className="space-y-6">
         <input
           type="text"
           name="title"
@@ -276,7 +258,10 @@ export default function AddVideoForm({
           required
         />
         <div>
-          <button onClick={handleCheckSlug} className=" bg-blue-500 hover:bg-blue-600 text-muted-foreground py-2 px-4 rounded" >
+          <button
+            onClick={handleCheckSlug}
+            className=" bg-blue-500 hover:bg-blue-600 text-muted-foreground py-2 px-4 rounded"
+          >
             check slug
           </button>
         </div>
@@ -310,15 +295,6 @@ export default function AddVideoForm({
           className="w-full border p-3 rounded"
         />
 
-        <input
-          type="number"
-          name="duration"
-          placeholder="Duration"
-          value={formData.duration}
-          onChange={handleChange}
-          className="w-full border p-3 rounded"
-        />
-
         <div>
           <label className="block mb-2 font-medium">Thumbnail</label>
 
@@ -346,65 +322,35 @@ export default function AddVideoForm({
         </div>
 
         <div>
-          <label className="block mb-2 font-medium">Preview Video</label>
+          <label className="block mb-2 font-medium">Video (MP4)</label>
 
           <input
             type="file"
-            name="previewVideo"
-            accept="video/mp4,video/*"
-            onChange={handleChange}
-          />
-
-          <div className="mt-3 border rounded-lg p-3">
-            {previewVideoPreview ? (
-              <video
-                src={previewVideoPreview}
-                controls
-                className="w-72 rounded"
-              />
-            ) : (
-              <div className="w-72 h-40 border rounded flex items-center justify-center text-gray-500">
-                No Preview Video Selected
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div>
-          <label className="block mb-2 font-medium">HLS Files</label>
-
-          <input
-            type="file"
-            multiple
-            name="videoFiles"
-            accept=".m3u8,.ts"
+            name="video"
+            accept="video/mp4"
             onChange={handleChange}
             required
           />
 
           <div className="mt-3 border rounded-lg p-3">
-            <p>
-              Selected Files:
-              <span className="font-bold ml-2">
-                {formData.videoFiles.length}
-              </span>
-            </p>
-
-            {formData.videoFiles.length > 0 && (
-              <div className="max-h-40 overflow-y-auto mt-2 text-sm">
-                {formData.videoFiles.slice(0, 20).map((file, index) => (
-                  <p key={index}>{file.name}</p>
-                ))}
-
-                {formData.videoFiles.length > 20 && (
-                  <p className="text-blue-500">
-                    + {formData.videoFiles.length - 20} more files
-                  </p>
-                )}
+            {videoPreview ? (
+              <video src={videoPreview} controls className="w-72 rounded" />
+            ) : (
+              <div className="w-72 h-40 border rounded flex items-center justify-center text-gray-500">
+                No Video Selected
               </div>
             )}
           </div>
         </div>
+
+        <input
+          type="number"
+          name="duration"
+          value={formData.duration}
+          readOnly
+          placeholder="Auto detected"
+          className="w-full border p-3 rounded bg-gray-100 cursor-not-allowed"
+        />
 
         <div>
           <h3 className="font-semibold mb-2">Actors</h3>
@@ -514,7 +460,7 @@ export default function AddVideoForm({
         )}
 
         <button
-          type="submit"
+          onClick={handleSubmit}
           disabled={loading}
           className="w-full bg-blue-600 text-white py-3 rounded"
         >
