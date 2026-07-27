@@ -103,7 +103,7 @@ export default function ImagesPage() {
       url,
     );
 
-    totast.success("URL copied");
+    toast.success("URL copied");
   }
 
   async function deleteImage(
