@@ -70,36 +70,89 @@ function VideoCard({ video }: VideoCardProps) {
   const [remoteFailed, setRemoteFailed] = useState(false);
   const useDefault = !initialSrc || remoteFailed;
   const touchTimer = useRef<NodeJS.Timeout | null>(null);
-
-  const onEnter = useCallback(() => {
+  const longPressed = useRef(false);
+  const [showPreview, setShowPreview] = useState(false);
+  // const onEnter = useCallback(() => {
+  //   if (!videoRef.current) return;
+  //   videoRef.current.currentTime = 0;
+  //   videoRef.current.play().catch(() => {});
+  // }, []);
+  const onEnter = () => {
     if (!videoRef.current) return;
+
+    setShowPreview(true);
+
     videoRef.current.currentTime = 0;
     videoRef.current.play().catch(() => {});
-  }, []);
+  };
+  // const onTouchStart = () => {
+  //   touchTimer.current = setTimeout(() => {
+  //     if (!videoRef.current) return;
+
+  //     videoRef.current.currentTime = 0;
+  //     videoRef.current.play().catch(() => {});
+  //   }, 500);
+  // };
   const onTouchStart = () => {
+    longPressed.current = false;
     touchTimer.current = setTimeout(() => {
       if (!videoRef.current) return;
+      longPressed.current = true;
+      setShowPreview(true);
 
       videoRef.current.currentTime = 0;
       videoRef.current.play().catch(() => {});
-    }, 500);
+    }, 200);
   };
+  // const onTouchEnd = () => {
+  //   if (touchTimer.current) {
+  //     clearTimeout(touchTimer.current);
+  //   }
+
+  //   if (!videoRef.current) return;
+
+  //   videoRef.current.pause();
+  //   videoRef.current.currentTime = 0;
+  // };
   const onTouchEnd = () => {
     if (touchTimer.current) {
       clearTimeout(touchTimer.current);
     }
 
+    setShowPreview(false);
+
     if (!videoRef.current) return;
 
     videoRef.current.pause();
     videoRef.current.currentTime = 0;
   };
 
-  const onLeave = useCallback(() => {
+  // const onLeave = useCallback(() => {
+  //   if (!videoRef.current) return;
+  //   videoRef.current.pause();
+  //   videoRef.current.currentTime = 0;
+  // }, []);
+  const onLeave = () => {
     if (!videoRef.current) return;
+
+    setShowPreview(false);
+
     videoRef.current.pause();
     videoRef.current.currentTime = 0;
-  }, []);
+  };
+
+  const onTouchMove = () => {
+    if (touchTimer.current) {
+      clearTimeout(touchTimer.current);
+    }
+  };
+
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (longPressed.current) {
+      e.preventDefault();
+      longPressed.current = false;
+    }
+  };
 
   const ago = timeAgo(video.createdAt);
   const isNew =
@@ -126,6 +179,7 @@ function VideoCard({ video }: VideoCardProps) {
         title={video.title}
         aria-label={`Watch ${video.title}`}
         className="block w-full"
+        onClick={onClick}
       >
         {/* Thumbnail — inline paddingBottom guarantees 16:9 height before CSS loads */}
         <div
@@ -135,6 +189,7 @@ function VideoCard({ video }: VideoCardProps) {
           onMouseLeave={onLeave}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
+          onTouchMove={onTouchMove}
         >
           {useDefault ? (
             <Image
@@ -168,7 +223,9 @@ function VideoCard({ video }: VideoCardProps) {
               loop
               playsInline
               preload="none"
-              className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                showPreview ? "opacity-100" : "opacity-0"
+              }`}
             />
           )}
 
