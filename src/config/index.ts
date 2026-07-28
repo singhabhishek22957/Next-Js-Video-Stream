@@ -43,6 +43,10 @@ export const adminSidebarMenuItems: SidebarMenuItem[] = [
         path: "/admin/videos/add-mp4",
       },
       {
+        label: "Add Mp4 CDN Video",
+        path: "/admin/videos/add-mp4-cdn",
+      },
+      {
         label: "Add Video",
         path: "/admin/videos/add",
       },

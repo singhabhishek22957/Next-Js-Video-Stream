@@ -27,17 +27,21 @@ interface AddVideoFormProps {
   }[];
 }
 
-export default function AddVideoFormMp4({
+export default function AddVideoFormMp4Cdn({
   genres,
   regions,
   languages,
 }: AddVideoFormProps) {
-  const [uploadProgress, setUploadProgress] = useState(0);
-
   const [loading, setLoading] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
+
+  const [uploadingThumbnail, setUploadingThumbnail] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
+
+  const [thumbnailProgress, setThumbnailProgress] = useState(0);
+  const [videoProgress, setVideoProgress] = useState(0);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -51,6 +55,8 @@ export default function AddVideoFormMp4({
     actors: [""],
 
     genre: [] as string[],
+    thumbnailUrl: "",
+    videoUrl: "",
 
     region: "",
 
@@ -81,6 +87,110 @@ export default function AddVideoFormMp4({
     setCheckingSlug(false);
   };
 
+  const handleThumbnailUpload = async () => {
+    if (!formData.thumbnail) {
+      toast.error("Please select a thumbnail first.");
+      return;
+    }
+
+    try {
+      setUploadingThumbnail(true);
+
+      const loadingToast = toast.loading("Uploading thumbnail to CDN...");
+
+      // Get upload URL
+      const { data } = await axios.post("/api/admin/upload-url", {
+        fileName: formData.thumbnail.name,
+        contentType: formData.thumbnail.type,
+        type: "thumbnail",
+      });
+
+      console.log(data.uploadUrl);
+
+      // Upload directly to CDN
+      await axios.put(data.uploadUrl, formData.thumbnail, {
+        headers: {
+          "Content-Type": formData.thumbnail.type,
+        },
+
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / (progressEvent.total || 1),
+          );
+
+          setThumbnailProgress(percent);
+        },
+      });
+
+      // Save CDN URL
+      setFormData((prev) => ({
+        ...prev,
+        thumbnailUrl: data.fileUrl,
+      }));
+
+      toast.dismiss(loadingToast);
+
+      toast.success("Thumbnail uploaded successfully.");
+    } catch (error: any) {
+      console.error("Upload error:", error?.response?.data || error);
+      console.error(error);
+
+      toast.error("Thumbnail upload failed.");
+    } finally {
+      setUploadingThumbnail(false);
+    }
+  };
+
+  const handleVideoUpload = async () => {
+    if (!formData.video) {
+      toast.error("Please select a video first.");
+      return;
+    }
+
+    try {
+      setUploadingVideo(true);
+
+      const loadingToast = toast.loading("Uploading video to CDN...");
+
+      // Get signed upload URL
+      const { data } = await axios.post("/api/admin/upload-url", {
+        fileName: formData.video.name,
+        contentType: formData.video.type,
+        type: "video",
+      });
+
+      // Upload directly to CDN
+      await axios.put(data.uploadUrl, formData.video, {
+        headers: {
+          "Content-Type": formData.video.type,
+        },
+
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / (progressEvent.total || 1),
+          );
+
+          setVideoProgress(percent);
+        },
+      });
+
+      // Save CDN URL
+      setFormData((prev) => ({
+        ...prev,
+        videoUrl: data.fileUrl,
+      }));
+
+      toast.dismiss(loadingToast);
+
+      toast.success("Video uploaded successfully.");
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Video upload failed.");
+    } finally {
+      setUploadingVideo(false);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -170,56 +280,58 @@ export default function AddVideoFormMp4({
       }
       setLoading(true);
 
-      const data = new FormData();
-      data.append("title", formData.title);
+      const data = {
+        title: formData.title,
+        description: formData.description,
+        duration: formData.duration,
+        slug: slug,
+        thumbnailUrl: formData.thumbnailUrl,
+        videoUrl: formData.videoUrl,
 
-      data.append("description", formData.description);
+        status: formData.status,
+        region: formData.region,
+        language: formData.language,
 
-      data.append("duration", formData.duration);
+        actors: formData.actors.filter(Boolean),
 
-      data.append("status", formData.status);
+        genre: formData.genre,
 
-      data.append("region", formData.region);
+        tags: formData.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
+      };
 
-      data.append("language", formData.language);
-
-      data.append("actors", JSON.stringify(formData.actors.filter(Boolean)));
-
-      data.append("genre", JSON.stringify(formData.genre));
-
-      data.append(
-        "tags",
-        JSON.stringify(
-          formData.tags
-            .split(",")
-            .map((t) => t.trim())
-            .filter(Boolean),
-        ),
-      );
-
-      if (formData.thumbnail) {
-        data.append("thumbnail", formData.thumbnail);
-      }
-
-      if (formData.video) {
-        data.append("video", formData.video);
-      }
-
-      const response: any = await axios.post("/api/admin/videosmp4", data, {
+      const response: any = await axios.post("/api/admin/videomp4", data, {
         headers: {
-          "Content-Type": "multipart/form-data",
-        },
-
-        onUploadProgress: (progressEvent) => {
-          const percent = Math.round(
-            (progressEvent.loaded * 100) / (progressEvent.total || 1),
-          );
-
-          setUploadProgress(percent);
+          "Content-Type": "application/json",
         },
       });
 
-      toast.success("Video Uploaded Successfully");
+      toast.success("Video metadata saved successfully.");
+      setFormData({
+        title: "",
+
+        description: "",
+        duration: "",
+        thumbnail: null,
+        video: null,
+        thumbnailUrl: "",
+        videoUrl: "",
+        actors: [""],
+        genre: [],
+        region: "",
+        language: "",
+        tags: "",
+        status: "published",
+      });
+
+      setThumbnailPreview(null);
+      setVideoPreview(null);
+      setThumbnailProgress(0);
+      setVideoProgress(0);
+      setSlug("");
+      setSlugAvailable(null);
     } catch (error) {
       console.error("Error uploading video:", error);
 
@@ -233,7 +345,7 @@ export default function AddVideoFormMp4({
     <div className="max-w-6xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Add Video</h1>
 
-      <form  className="space-y-6">
+      <form className="space-y-6">
         <input
           type="text"
           name="title"
@@ -245,6 +357,7 @@ export default function AddVideoFormMp4({
         />
         <div>
           <button
+            type="submit"
             onClick={handleCheckSlug}
             className=" bg-blue-500 hover:bg-blue-600 text-muted-foreground py-2 px-4 rounded"
           >
@@ -305,6 +418,47 @@ export default function AddVideoFormMp4({
               </div>
             )}
           </div>
+          {uploadingThumbnail && (
+            <div className="mt-4">
+              <div className="w-full bg-gray-200 h-3 rounded">
+                <div
+                  className="bg-green-500 h-3 rounded"
+                  style={{
+                    width: `${thumbnailProgress}%`,
+                  }}
+                />
+              </div>
+
+              <p className="mt-2 text-sm">{thumbnailProgress}% Uploaded</p>
+            </div>
+          )}
+          {formData.thumbnailUrl && (
+            <div className="mt-4">
+              <label className="font-medium block mb-2">Thumbnail URL</label>
+
+              <input
+                readOnly
+                value={formData.thumbnailUrl}
+                className="w-full border rounded p-2 bg-gray-100"
+              />
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={handleThumbnailUpload}
+            disabled={
+              !formData.thumbnail ||
+              uploadingThumbnail ||
+              !!formData.thumbnailUrl
+            }
+            className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          >
+            {formData.thumbnailUrl
+              ? "✓ Uploaded"
+              : uploadingThumbnail
+                ? "Uploading..."
+                : "Upload Thumbnail"}
+          </button>
         </div>
 
         <div>
@@ -327,6 +481,44 @@ export default function AddVideoFormMp4({
               </div>
             )}
           </div>
+          {uploadingVideo && (
+            <div className="mt-4">
+              <div className="w-full bg-gray-200 h-3 rounded">
+                <div
+                  className="bg-blue-600 h-3 rounded"
+                  style={{
+                    width: `${videoProgress}%`,
+                  }}
+                />
+              </div>
+
+              <p className="mt-2 text-sm">{videoProgress}% Uploaded</p>
+            </div>
+          )}
+          {formData.videoUrl && (
+            <div className="mt-4">
+              <label className="block font-medium mb-2">Video URL</label>
+
+              <input
+                type="text"
+                readOnly
+                value={formData.videoUrl}
+                className="w-full border rounded p-2 bg-gray-100"
+              />
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={handleVideoUpload}
+            disabled={!formData.video || uploadingVideo || !!formData.videoUrl}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >
+            {formData.videoUrl
+              ? "✓ Uploaded"
+              : uploadingVideo
+                ? "Uploading..."
+                : "Upload Video"}
+          </button>
         </div>
 
         <input
@@ -430,27 +622,18 @@ export default function AddVideoFormMp4({
           <option value="unlisted">Unlisted</option>
         </select>
 
-        {loading && (
-          <div>
-            <div className="w-full bg-gray-200 h-4 rounded">
-              <div
-                className="bg-green-500 h-4 rounded"
-                style={{
-                  width: `${uploadProgress}%`,
-                }}
-              />
-            </div>
-
-            <p className="mt-2 font-semibold">{uploadProgress}% Uploaded</p>
-          </div>
-        )}
-
         <button
           onClick={handleSubmit}
-          disabled={loading}
+          disabled={
+            loading ||
+            uploadingThumbnail ||
+            uploadingVideo ||
+            !formData.thumbnailUrl ||
+            !formData.videoUrl
+          }
           className="w-full bg-blue-600 text-white py-3 rounded"
         >
-          {loading ? "Uploading..." : "Upload Video"}
+          {loading ? "Saving..." : "Save Metadata"}
         </button>
       </form>
     </div>
