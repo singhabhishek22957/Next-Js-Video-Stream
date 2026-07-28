@@ -218,12 +218,12 @@ export default async function VideoPage({ params, searchParams }: PageProps) {
   const cleanedTags = (video.tags ?? []).map(cleanTag);
 
   return (
-    <main className="mx-auto mt-2 max-w-[1600px]  md:px-5 xl:px-6 ">
+    <main className="mx-auto mt-8 max-w-[1600px]  md:px-5 xl:px-6 ">
       <div className="flex  flex-col xl:flex-row gap-5">
         {/* ── LEFT ── */}
         <section className="flex-1  min-w-0 flex flex-col gap-4">
           {/* PLAYER */}
-          <div className="overflow-hidden  rounded-2xl border border-border bg-black">
+          <div className="overflow-hidden   rounded border border-border bg-black">
             <div className="aspect-video">
               <VideoPlayer
                 src={video.videoUrl}
@@ -316,7 +316,7 @@ export default async function VideoPage({ params, searchParams }: PageProps) {
         </section>
 
         {/* ── RIGHT SIDEBAR — regional trending ── */}
-        <aside className="hidden xl:flex xl:w-[300px] xl:shrink-0 xl:sticky xl:top-20 xl:self-start xl:h-[calc(100vh-6rem)] flex-col rounded-2xl border border-border overflow-hidden">
+        <aside className="hidden xl:flex xl:w-[300px] xl:shrink-0 xl:sticky  xl:self-start xl:h-[calc(100vh-6rem)] flex-col rounded border border-border overflow-hidden">
           <Suspense fallback={<SidebarSkeleton />}>
             <RegionalSidebar
               slug={video.slug}

@@ -7,9 +7,6 @@ import type Player from "video.js/dist/types/player";
 
 import "video.js/dist/video-js.css";
 
-// import "videojs-contrib-ads";
-// import "videojs-ima";
-// import "videojs-contrib-quality-levels";
 
 // Guard plugin registration — safe in both dev HMR and production
 if (typeof window !== "undefined") {

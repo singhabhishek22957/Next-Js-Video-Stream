@@ -68,19 +68,19 @@ export default function VideoGrid({
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         @media (min-width: 640px) {
-          .video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+          .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (min-width: 768px) {
           .video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
         }
         @media (min-width: 1024px) {
-          .video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+          .video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         }
         @media (min-width: 1280px) {
           .video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         }
         @media (min-width: 1536px) {
-          .video-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+          .video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         }
       `}</style>
 

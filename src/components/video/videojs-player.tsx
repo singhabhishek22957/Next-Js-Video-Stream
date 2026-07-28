@@ -152,15 +152,14 @@ export default function VideoJSPlayer({
   };
 
   return (
-    <div className="my-4">
+    <div >
       <div
         className="
           overflow-hidden
-          rounded-xl
+          rounded
 
           border
           border-border
-
           bg-black
         "
       >

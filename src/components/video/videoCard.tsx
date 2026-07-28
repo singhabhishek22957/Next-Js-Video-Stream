@@ -72,11 +72,7 @@ function VideoCard({ video }: VideoCardProps) {
   const touchTimer = useRef<NodeJS.Timeout | null>(null);
   const longPressed = useRef(false);
   const [showPreview, setShowPreview] = useState(false);
-  // const onEnter = useCallback(() => {
-  //   if (!videoRef.current) return;
-  //   videoRef.current.currentTime = 0;
-  //   videoRef.current.play().catch(() => {});
-  // }, []);
+  
   const onEnter = () => {
     if (!videoRef.current) return;
 
@@ -85,14 +81,7 @@ function VideoCard({ video }: VideoCardProps) {
     videoRef.current.currentTime = 0;
     videoRef.current.play().catch(() => {});
   };
-  // const onTouchStart = () => {
-  //   touchTimer.current = setTimeout(() => {
-  //     if (!videoRef.current) return;
-
-  //     videoRef.current.currentTime = 0;
-  //     videoRef.current.play().catch(() => {});
-  //   }, 500);
-  // };
+  
   const onTouchStart = () => {
     longPressed.current = false;
     touchTimer.current = setTimeout(() => {
@@ -104,16 +93,7 @@ function VideoCard({ video }: VideoCardProps) {
       videoRef.current.play().catch(() => {});
     }, 200);
   };
-  // const onTouchEnd = () => {
-  //   if (touchTimer.current) {
-  //     clearTimeout(touchTimer.current);
-  //   }
-
-  //   if (!videoRef.current) return;
-
-  //   videoRef.current.pause();
-  //   videoRef.current.currentTime = 0;
-  // };
+  
   const onTouchEnd = () => {
     if (touchTimer.current) {
       clearTimeout(touchTimer.current);
@@ -127,11 +107,7 @@ function VideoCard({ video }: VideoCardProps) {
     videoRef.current.currentTime = 0;
   };
 
-  // const onLeave = useCallback(() => {
-  //   if (!videoRef.current) return;
-  //   videoRef.current.pause();
-  //   videoRef.current.currentTime = 0;
-  // }, []);
+  
   const onLeave = () => {
     if (!videoRef.current) return;
 
@@ -183,7 +159,7 @@ function VideoCard({ video }: VideoCardProps) {
       >
         {/* Thumbnail — inline paddingBottom guarantees 16:9 height before CSS loads */}
         <div
-          className="relative w-full rounded-xl overflow-hidden bg-neutral-800"
+          className="relative w-full rounded overflow-hidden bg-neutral-800"
           style={{ paddingBottom: "56.25%" }}
           onMouseEnter={onEnter}
           onMouseLeave={onLeave}
