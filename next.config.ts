@@ -26,10 +26,10 @@ const csp = isDev
       worker-src 'self' blob:;
       child-src 'self' blob:;
       style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https://*.b-cdn.net https://i.pinimg.com;
+      img-src 'self' data: blob: https://*.b-cdn.net https://i.pinimg.com;
       media-src 'self' blob: data: https://*.b-cdn.net;
       font-src 'self' data:;
-      connect-src 'self' blob: https://*.b-cdn.net;
+      connect-src 'self' blob: https://*.b-cdn.net https://*.storage.bunnycdn.com;
       object-src 'none';
       frame-ancestors 'none';
       base-uri 'self';
