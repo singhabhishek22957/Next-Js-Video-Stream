@@ -74,7 +74,7 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
   return (
     <div className="min-h-screen">
       {/* Hero header */}
-      <div className="relative border-b border-white/5 bg-gradient-to-b from-white/5 to-transparent px-4 py-10 md:px-8 md:py-14">
+      <div className="relative border-b mt-6 md:mt-0 xl:mt-0 border-white/5 bg-gradient-to-b from-white/5 to-transparent px-4 py-10 md:px-8 md:py-14">
         <div className="max-w-[1600px] mx-auto">
           <SearchBreadcrumb type={type} />
 
@@ -109,11 +109,10 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
           <>
             {/* Divider label */}
 
-            <div className="flex-1 mt-14 h-px bg-white/5"></div>
 
             <div
               className="
-              mt-10
+              
                 grid
                 gap-4
                 md:gap-5

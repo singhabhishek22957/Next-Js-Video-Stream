@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import SmoothScroll from '@/components/smoothscroll';
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/providers/themeProvider";
@@ -67,6 +68,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <ThemeProvider>
           <NextTopLoader color="#FF4D8D" height={3} showSpinner={false} />
+          <SmoothScroll />
           {children}
           <Toaster richColors position="top-right" />
         </ThemeProvider>

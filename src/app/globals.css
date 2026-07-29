@@ -216,6 +216,9 @@
 ========================= */
 
 html {
+  scroll-behavior: smooth;
+}
+html {
   color-scheme: light;
 }
 

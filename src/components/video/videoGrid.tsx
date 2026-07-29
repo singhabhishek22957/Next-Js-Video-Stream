@@ -65,7 +65,7 @@ export default function VideoGrid({
         .video-grid {
           display: grid;
           gap: 12px;
-          grid-template-columns: repeat(1, minmax(0, 1fr));
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         @media (min-width: 640px) {
           .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
