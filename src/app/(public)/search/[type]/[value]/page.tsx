@@ -98,14 +98,14 @@ export default async function SearchValuePage({
             </div>
 
             {/* Count badge */}
-            <div className="mt-4 sm:mt-0 self-start sm:self-auto">
+            {/* <div className="mt-4 sm:mt-0 self-start sm:self-auto">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium">
                 <span className="text-primary font-bold">
                   {result.totalVideos}
                 </span>
                 <span className="text-muted-foreground">videos found</span>
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

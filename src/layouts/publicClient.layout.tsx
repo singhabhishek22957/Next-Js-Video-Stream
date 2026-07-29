@@ -20,11 +20,17 @@ export const metadata: Metadata = {
 interface PublicLayoutClientProps {
   children: React.ReactNode;
   menuItems: SidebarMenuItem[];
+  genres: string[];
+  regions: string[];
+  languages: string[];
 }
 
 export default function PublicLayoutClient({
   children,
   menuItems,
+  genres,
+  regions,
+  languages,
 }: PublicLayoutClientProps) {
   const [open, setOpen] = useState(false);
 
@@ -63,7 +69,7 @@ export default function PublicLayoutClient({
           "
         >
           {children}
-          <Footer />
+          <Footer genres={genres} regions={regions} languages={languages} />
         </main>
       </div>
     </div>

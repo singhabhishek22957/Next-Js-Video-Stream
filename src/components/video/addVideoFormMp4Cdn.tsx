@@ -302,6 +302,11 @@ export default function AddVideoFormMp4Cdn({
           .filter(Boolean),
       };
 
+      if(!data.thumbnailUrl || !data.videoUrl || !data.title || !data.description || !data.duration || !data.region || !data.language || !data.actors || !data.genre || !data.tags){ 
+        toast.error("Please fill in all fields.");
+        return;
+      }
+
       const response: any = await axios.post("/api/admin/videomp4", data, {
         headers: {
           "Content-Type": "application/json",
@@ -521,6 +526,7 @@ export default function AddVideoFormMp4Cdn({
           </button>
         </div>
 
+        <label className="block mb-2 font-medium">Duration</label>
         <input
           type="number"
           name="duration"

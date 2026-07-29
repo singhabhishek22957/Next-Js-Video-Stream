@@ -47,7 +47,7 @@ export async function getVideoBySlugAction(slug: string) {
   }
 }
 
-const VIDEO_LIMIT = 20;
+const VIDEO_LIMIT =Number(process.env.VIDEO_LIMIT!) || 30;
 
 export async function getAllVideosAction(
   page: number = 1,

@@ -70,14 +70,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             movies and newly released content from creators worldwide.
           </p>
 
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-1.5 text-sm font-medium shadow-sm">
               <span className="text-primary font-bold">
                 {result.totalVideos}
               </span>
               <span className="text-muted-foreground">videos available</span>
             </span>
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -2,7 +2,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Footer() {
+interface FooterProps {
+  genres: string[];
+  regions: string[];
+  languages: string[];
+}
+
+function toSentenceCase(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+export default function Footer({ genres, regions, languages }: FooterProps) {
+  
   return (
     <footer className="border-t border-border bg-background">
       {" "}
@@ -82,91 +93,95 @@ export default function Footer() {
 
           {/* Popular Genres */}
           <div>
-            <h3 className="mb-4 font-semibold">Popular Genres</h3>
+            <h3 className="mb-4 font-semibold">Popular Video Genres</h3>
 
             <ul className="space-y-2 text-sm">
-              <li className="hover:text-primary transition-colors" >
-                <Link href="/search/genre/action">Action</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/genre/drama">Drama</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/genre/comedy">Comedy</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/genre/romance">Romance</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/genre/thriller">Thriller</Link>
-              </li>
+              {genres.length > 0 &&
+                genres.slice(0, 5).map((genre: any) => (
+                  <li
+                    key={genre._id}
+                    className="hover:text-primary transition-colors"
+                  >
+                    <Link href={`/search/genre/${genre.name}`}>
+                      Watch {toSentenceCase(genre.name)}
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </div>
 
           {/* Languages */}
           <div>
-            <h3 className="mb-4 font-semibold">Languages</h3>
+            <h3 className="mb-4 font-semibold">Browse Videos by Language</h3>
 
             <ul className="space-y-2 text-sm">
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/language/hindi">Hindi</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/language/english">English</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/language/tamil">Tamil</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/language/telugu">Telugu</Link>
-              </li>
-
-              <li className="hover:text-primary transition-colors">
-                <Link href="/search/language/korean">Korean</Link>
-              </li>
+              {languages.length > 0 &&
+                languages.slice(0, 5).map((lang: any) => (
+                  <li
+                    key={lang._id}
+                    className="hover:text-primary transition-colors"
+                  >
+                    <Link href={`/search/language/${lang.name}`}>
+                      {toSentenceCase(lang.name)}
+                    </Link>
+                  </li>
+                ))}
             </ul>
           </div>
 
           {/* Regions */}
           <div>
-            <h3 className="mb-4 font-semibold">Regions</h3>
+            <h3 className="mb-4 font-semibold">Browse Videos by Region</h3>
+
+            <ul className="space-y-2 text-sm">
+              {regions.length > 0 &&
+                regions.slice(0, 5).map((reg: any) => (
+                  <li
+                    key={reg._id}
+                    className="hover:text-primary transition-colors"
+                  >
+                    <Link href={`/search/region/${reg.name}`}>
+                      {toSentenceCase(reg.name)}
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </div>
+
+          <nav aria-label="Company">
+            <h2 className="mb-4 font-semibold">Company</h2>
 
             <ul className="space-y-2 text-sm">
               <li className="hover:text-primary transition-colors">
-                <Link href="/search/region/india">India</Link>
+                <Link href="/about">About</Link>
               </li>
 
               <li className="hover:text-primary transition-colors">
-                <Link href="/search/region/usa">USA</Link>
+                <Link href="/contact">Contact</Link>
               </li>
 
               <li className="hover:text-primary transition-colors">
-                <Link href="/search/region/japan">Japan</Link>
+                <Link href="/privacy-policy">Privacy Policy</Link>
               </li>
 
               <li className="hover:text-primary transition-colors">
-                <Link href="/search/region/korea">Korea</Link>
+                <Link href="/terms">Terms of Service</Link>
               </li>
 
               <li className="hover:text-primary transition-colors">
-                <Link href="/search/region/china">China</Link>
+                <Link href="/dmca">DMCA</Link>
               </li>
             </ul>
-          </div>
+          </nav>
         </div>
         {/* SEO Text */}
         <div className="mt-10 border-t border-border pt-6">
           <p className="text-sm text-muted-foreground">
-            Discover thousands of videos across action, drama, comedy, romance
-            and thriller genres. Browse content by language, region and
-            popularity with high-quality streaming and regular updates.
+            Desixyz lets you discover trending videos from multiple genres,
+            languages and regions. Watch Action, Romance, Drama, Comedy and
+            Thriller videos in Hindi, English, Punjabi, Tamil, Telugu and many
+            more languages. Browse content by country, category and popularity
+            with fast streaming, HD quality and regularly updated collections.
           </p>
 
           <p className="mt-4 text-xs text-muted-foreground">

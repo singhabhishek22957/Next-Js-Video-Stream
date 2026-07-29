@@ -91,14 +91,14 @@ export default async function SearchTypePage({ params }: SearchTypePageProps) {
             </div>
 
             {/* Count badge */}
-            <div className="mt-4 sm:mt-0 flex items-center gap-2 self-start sm:self-auto">
+            {/* <div className="mt-4 sm:mt-0 flex items-center gap-2 self-start sm:self-auto">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm font-medium">
                 <span className="text-primary font-bold">{items.length}</span>
                 <span className="text-muted-foreground">
                   {titleMap[type].toLowerCase()} available
                 </span>
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

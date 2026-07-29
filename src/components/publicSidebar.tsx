@@ -24,7 +24,6 @@ export default function PublicSidebar({
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
           side="left"
-          
           className="
             w-1/2
             p-0
@@ -35,8 +34,6 @@ export default function PublicSidebar({
           "
         >
           <div className="flex max-h-screen h-screen flex-col">
-            
-
             {/* Scrollable Menu */}
             <div
               className="
@@ -66,7 +63,7 @@ export default function PublicSidebar({
                 text-muted-foreground
               "
             >
-             <Image src="/logo.png" alt="Logo" width={48} height={48} />
+              <Image src="/logo.png" alt="Logo" width={48} height={48} />
 
               <span className="flex items-center gap-1">
                 <Heart className="h-3 w-3 fill-current" />
@@ -99,8 +96,6 @@ export default function PublicSidebar({
     border-border
         "
       >
-      
-
         {/* Scrollable Menu */}
         <div
           className="
@@ -130,7 +125,7 @@ export default function PublicSidebar({
             text-muted-foreground
           "
         >
-         <Image src="/logo.png" alt="Logo" width={48} height={48} />
+          <Image src="/logo.png" alt="Logo" width={48} height={48} />
 
           <span className="flex text-primary items-center gap-1">
             <Heart className="h-3 text-primary w-3 fill-current" />
