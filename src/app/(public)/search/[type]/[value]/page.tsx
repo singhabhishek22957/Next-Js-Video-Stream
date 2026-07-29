@@ -78,7 +78,7 @@ export default async function SearchValuePage({
   return (
     <div className="min-h-screen">
       {/* Hero header */}
-      <div className="relative border-b border-white/5 bg-gradient-to-b from-white/5 to-transparent px-4 py-10 md:px-8 md:py-14">
+      <div className="relative border-b border-white/5 bg-gradient-to-b from-white/5 to-transparent mt-6 md:mt-0 xl:mt-0  px-4 py-10 md:px-8 md:py-14">
         <div className="max-w-[1600px] mx-auto">
           <SearchBreadcrumb type={type} value={value} />
 

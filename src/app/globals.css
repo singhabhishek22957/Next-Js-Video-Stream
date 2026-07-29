@@ -7,74 +7,7 @@
 /* Force responsive grid classes into CSS output */
 @source inline("grid gap-3 gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 md:gap-4");
 
-/* =========================
-   LIGHT THEME
-========================= */
-/* :root {
-  --surface: #FFFFFF;
-
-  --primary: oklch(0.205 0 0);
-  --secondary: oklch(0.97 0 0);
-  --muted: oklch(0.97 0 0);
-
-  --border: oklch(0.922 0 0);
-
-  --background: oklch(1 0 0);
-
-  --foreground: oklch(0.145 0 0);
-
-  --card: oklch(1 0 0);
-
-  --card-foreground: oklch(0.145 0 0);
-
-  --popover: oklch(1 0 0);
-
-  --popover-foreground: oklch(0.145 0 0);
-
-  --primary-foreground: oklch(0.985 0 0);
-
-  --secondary-foreground: oklch(0.205 0 0);
-
-  --muted-foreground: oklch(0.556 0 0);
-
-  --accent: oklch(0.97 0 0);
-
-  --accent-foreground: oklch(0.205 0 0);
-
-  --destructive: oklch(0.577 0.245 27.325);
-
-  --input: oklch(0.922 0 0);
-
-  --ring: oklch(0.708 0 0);
-
-  --chart-1: oklch(0.87 0 0);
-
-  --chart-2: oklch(0.556 0 0);
-
-  --chart-3: oklch(0.439 0 0);
-
-  --chart-4: oklch(0.371 0 0);
-
-  --chart-5: oklch(0.269 0 0);
-
-  --radius: 0.625rem;
-
-  --sidebar: oklch(0.985 0 0);
-
-  --sidebar-foreground: oklch(0.145 0 0);
-
-  --sidebar-primary: oklch(0.205 0 0);
-
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-
-  --sidebar-accent: oklch(0.97 0 0);
-
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-
-  --sidebar-border: oklch(0.922 0 0);
-
-  --sidebar-ring: oklch(0.708 0 0);
-} */
+/* light */
 
 :root {
   --background: #fff9fb;
@@ -127,71 +60,7 @@
   --sidebar-ring: #ff4d8d;
 }
 
-/* =========================
-   DARK THEME
-========================= */
-/* .dark {
-  --background: oklch(0.145 0 0);
-  --surface: #111111;
-
-  --primary: oklch(0.922 0 0);
-  --secondary: oklch(0.269 0 0);
-
-  --foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-
-  --border: oklch(1 0 0 / 10%);
-
-  --card: oklch(0.205 0 0);
-
-  --card-foreground: oklch(0.985 0 0);
-
-  --popover: oklch(0.205 0 0);
-
-  --popover-foreground: oklch(0.985 0 0);
-
-  --primary-foreground: oklch(0.205 0 0);
-
-  --secondary-foreground: oklch(0.985 0 0);
-
-  --muted-foreground: oklch(0.708 0 0);
-
-  --accent: oklch(0.269 0 0);
-
-  --accent-foreground: oklch(0.985 0 0);
-
-  --destructive: oklch(0.704 0.191 22.216);
-
-  --input: oklch(1 0 0 / 15%);
-
-  --ring: oklch(0.556 0 0);
-
-  --chart-1: oklch(0.87 0 0);
-
-  --chart-2: oklch(0.556 0 0);
-
-  --chart-3: oklch(0.439 0 0);
-
-  --chart-4: oklch(0.371 0 0);
-
-  --chart-5: oklch(0.269 0 0);
-
-  --sidebar: oklch(0.205 0 0);
-
-  --sidebar-foreground: oklch(0.985 0 0);
-
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-
-  --sidebar-accent: oklch(0.269 0 0);
-
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-
-  --sidebar-border: oklch(1 0 0 / 10%);
-
-  --sidebar-ring: oklch(0.556 0 0);
-} */
+/* dark */
 
 
 .dark {
@@ -294,6 +163,54 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* video.js */
+
+
+/* Force video-js to fill its parent at all times */
+.video-js {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.video-js video,
+.video-js .vjs-tech {
+  object-fit: contain !important;
+  background: black;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Poster image — same size before playback */
+.video-js .vjs-poster {
+  background-size: contain !important;
+  background-color: black;
+}
+
+/* Control bar */
+.video-js .vjs-control-bar {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.vjs-button > .vjs-icon-placeholder:before {
+  color: white !important;
+}
+
+.vjs-time-control {
+  color: white !important;
+}
+
+.vjs-progress-holder {
+  height: 8px !important;
+  border-radius: 10px !important;
+}
+
+.vjs-quality-selector .vjs-icon-placeholder:before {
+  content: "⚙️";
+  font-size: 14px;
+}
 /* =========================
    BASE
 ========================= */
